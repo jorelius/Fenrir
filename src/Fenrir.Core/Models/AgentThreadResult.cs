@@ -11,14 +11,14 @@ namespace Fenrir.Core.Models
             Seconds = new Dictionary<int, Second>();
         }
 
-        public void Add(int elapsed, long bytes, float responsetime, bool trackResponseTime)
+        public void Add(int elapsed, long bytes, float responsetime, bool trackResponseTime, int statusCode)
         {
-            GetItem(elapsed).Add(bytes, responsetime, trackResponseTime);
+            GetItem(elapsed).Add(bytes, responsetime, trackResponseTime, statusCode);
         }
 
-        public void AddError(int elapsed, float responsetime, bool trackResponseTime)
+        public void AddError(int elapsed, float responsetime, bool trackResponseTime, int statusCode)
         {
-            GetItem(elapsed).AddError(responsetime, trackResponseTime);
+            GetItem(elapsed).AddError(responsetime, trackResponseTime, statusCode);
         }
 
         private Second GetItem(int elapsed)

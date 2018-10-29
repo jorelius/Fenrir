@@ -46,23 +46,23 @@ namespace Fenrir.Core.Models
             RequestsPerSecond = Count / (Elapsed.TotalMilliseconds / 1000);
             BytesPrSecond = items.Sum(s => s.Bytes) / (Elapsed.TotalMilliseconds / 1000);
 
-            //foreach (var statusCode in items.SelectMany(s => s.StatusCodes))
-            //{
-            //    if (StatusCodes.ContainsKey(statusCode.Key))
-            //        StatusCodes[statusCode.Key] += statusCode.Value;
-            //    else
-            //        StatusCodes.Add(statusCode.Key, statusCode.Value);
-            //}
+            foreach (var statusCode in items.Select(s => s.StatusCode))
+            {
+               if (StatusCodes.ContainsKey(statusCode))
+                   StatusCodes[statusCode] += statusCode;
+               else
+                   StatusCodes.Add(statusCode, statusCode);
+            }
 
-            //foreach (var exception in items.SelectMany(s => s.Exceptions))
-            //{
+            // foreach (var exception in items.SelectMany(s => s.Exceptions))
+            // {
             //    if (Exceptions.ContainsKey(exception.Key))
             //        Exceptions[exception.Key] += exception.Value;
             //    else
             //        Exceptions.Add(exception.Key, exception.Value);
-            //}
+            // }
 
-            //Errors = StatusCodes.Where(s => s.Key >= 400).Sum(s => s.Value) + Exceptions.Sum(e => e.Value);
+            Errors = StatusCodes.Where(s => s.Key >= 400).Sum(s => s.Value) + Exceptions.Sum(e => e.Value);
 
             var responseTimes = GetResponseTimes(atResult.ResponseTimes);
             if (!responseTimes.Any())

@@ -19,8 +19,6 @@ namespace Fenrir.Core
             _AgentJob = AgentJob;
         }
 
-        #region Load Test
-
         public Task<AgentResult> Run(int threads, TimeSpan duration, CancellationToken cancellationToken)
         {
             return Run(threads, duration, null, cancellationToken);
@@ -84,7 +82,7 @@ namespace Fenrir.Core
             }
             catch (Exception)
             {
-                AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false);
+                AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false, 0);
                 results.Enqueue(AgentThreadResult);
                 resetEvent.Set();
                 return;
@@ -98,7 +96,7 @@ namespace Fenrir.Core
                 }
                 catch (Exception)
                 {
-                    AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false);
+                    AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false, 0);
                 }
             }
             
@@ -118,14 +116,6 @@ namespace Fenrir.Core
 
             results.Enqueue(job.GetResults());
             resetEvent.Set();
-        }
-
-        #endregion Load Test
-
-        public Task<AgentResult> Run(int threads, JsonHttpRequestTree requestTree, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-            //return Run(threads, duration, null, cancellationToken);
         }
     }
 }

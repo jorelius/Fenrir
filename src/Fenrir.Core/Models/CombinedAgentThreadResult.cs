@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fenrir.Core.Models
 {
@@ -20,7 +21,7 @@ namespace Fenrir.Core.Models
             {
                 foreach (var second in result.Seconds)
                 {
-                    ResponseTimes.Add(second.Value.ResponseTimes);
+                    ResponseTimes.Add(second.Value.ResponseTimes.Select(r => r.ResponseTime).ToList());
                     second.Value.ClearResponseTimes();
                     
                     if (Seconds.ContainsKey(second.Key))

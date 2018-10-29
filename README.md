@@ -14,35 +14,49 @@ Fenrir is a service testing framework that compares results of micro-services. R
         "pre": [
             {
                 "url":"http://www.example.com/preThings",
-                "verb":"post",
+                "method":"post",
                 "payload": {
-                    "content-type":"application/json",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
                     "body": {
                         "what":"thing2"
                     }
                 },
                 "expectedResult": {
                     "code": 201,
-                    "content-type":"application/json",
-                    "body": {
-                        "id":"*",
-                        "what":"thing2"
+                    "payload": {
+                        "headers": [
+                            {
+                                "name": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "what":"thing2"
+                        }
                     }
                 }
             }
         ],
         "url":"http://www.example.com/things/123",
-        "verb":"get",
-        "comparisonRequest":{
-            "url":"http://test.example.com/things/123",
-            "verb":"get"
-        },
+        "method":"get",
         "expectedResult": {
             "code": 200,
-            "content-type":"application/json",
-            "body": {
-                "id":"123",
-                "what":"thing"
+            "payload": {
+                "headers": [
+                    {
+                        "name": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "id":"123",
+                    "what":"thing"
+                }
             }
         }
     }
