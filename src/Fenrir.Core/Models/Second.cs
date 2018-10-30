@@ -8,19 +8,24 @@ namespace Fenrir.Core.Models
         public long Bytes { get; private set; }
         public long Errors { get; private set; }
         public int Elapsed { get; }
-        public List<(int StatusCode, float ResponseTime)> ResponseTimes { get; private set; }
-
-        public int StatusCode { get; set; }
+        public List<float> ResponseTimes { get; private set; }
+        public List<int> StatusCodes { get; private set; }
 
         public Second(int elapsed)
         {
             Elapsed = elapsed;
-            ResponseTimes = new List<(int StatusCode, float ResponseTime)>();
+            ResponseTimes = new List<float>();
+            StatusCodes = new List<int>();
         }
 
         internal void ClearResponseTimes()
         {
-            ResponseTimes = new List<(int StatusCode, float ResponseTime)>();
+            ResponseTimes = new List<float>();
+        }
+
+        internal void ClearStatusCodes()
+        {
+            StatusCodes = new List<int>();
         }
 
         public void Add(long bytes, float responseTime, bool trackResponseTime, int statusCode)
@@ -29,9 +34,9 @@ namespace Fenrir.Core.Models
             Bytes += bytes;
 
             if (trackResponseTime)
-                ResponseTimes.Add((statusCode, responseTime));
+                ResponseTimes.Add(responseTime);
 
-            StatusCode = statusCode;
+            StatusCodes.Add(statusCode);
         }
 
         public void AddError(float responseTime, bool trackResponseTime, int statusCode)
@@ -40,7 +45,9 @@ namespace Fenrir.Core.Models
             Errors++;
 
             if (trackResponseTime)
-                ResponseTimes.Add((statusCode, responseTime));
+                ResponseTimes.Add(responseTime);
+
+            StatusCodes.Add(statusCode);
         }
 
         public void AddMerged(Second second)
