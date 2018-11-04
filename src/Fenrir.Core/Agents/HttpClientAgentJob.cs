@@ -20,7 +20,7 @@ namespace Fenrir.Core.Agents
             _request = request;
         }
 
-        private HttpClientAgentJob(int index, HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult)
+        public HttpClientAgentJob(int index, HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult)
         {
             _index = index;
             _httpClient = httpClient;
@@ -29,10 +29,9 @@ namespace Fenrir.Core.Agents
             _stopwatch.Start();
             _localStopwatch = new Stopwatch();
             _agentThreadResult = agentThreadResult;
-            _httpClient = new HttpClient();
         }
 
-        public async Task DoWork()
+        public async Task<AgentThreadResult> DoWork()
         {
             _localStopwatch.Restart();
 
@@ -48,16 +47,18 @@ namespace Fenrir.Core.Agents
                 else
                     _agentThreadResult.AddError((int)_stopwatch.ElapsedMilliseconds, responseTime, _index < 10, code);
             }
-        }
 
-        public AgentThreadResult GetResults()
-        {
             return _agentThreadResult;
         }
 
-        public Task<IAgentJob> Init(int index, AgentThreadResult agentThreadResult)
+        public Task<IAgentJob> InitAsync(int index, AgentThreadResult agentThreadResult)
         {
             return Task.FromResult<IAgentJob>(new HttpClientAgentJob(index, _httpClient, _request, agentThreadResult));
+        }
+
+        public IAgentJob Init(int index, AgentThreadResult agentThreadResult)
+        {
+            return new HttpClientAgentJob(index, _httpClient, _request, agentThreadResult);
         }
     }
 }

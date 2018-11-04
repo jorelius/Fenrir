@@ -10,21 +10,27 @@ namespace Fenrir.Core.Extensions
     {
         public static HttpRequestMessage ToHttpRequestMessage(this Request request)
         {
-            var method = (HttpMethod)Enum.Parse(typeof(HttpMethod),request.Method, true);
-            var message =  new HttpRequestMessage(method, request.Url); 
-
-            if (request?.Payload?.Headers != null && request.Payload.Headers.Count > 0)
-            {
-                foreach(var header in request.Payload.Headers)
-                {
-                    message.Headers.Add(header.Key, header.Value);
-                }
-            }
+            HttpRequestMessage message =  new HttpRequestMessage(new HttpMethod(request.Method), request.Url);
 
             if (request?.Payload?.Body != null)
             {
-                var data = Encoding.UTF8.GetBytes(request.Payload.Body.ToString());
+                dynamic data = Encoding.UTF8.GetBytes(request.Payload.Body.ToString());
                 message.Content = new ByteArrayContent(data);
+            }
+
+            if (request?.Payload?.Headers != null && request.Payload.Headers.Count > 0)
+            {
+                foreach(System.Collections.Generic.KeyValuePair<string, string> header in request.Payload.Headers)
+                {
+                    if (header.Key.StartsWith("content", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        message?.Content?.Headers.Add(header.Key, header.Value);
+                    }
+                    else
+                    {
+                        message.Headers.Add(header.Key, header.Value);
+                    }
+                }
             }
 
             return message;

@@ -1,0 +1,79 @@
+{
+
+  "requests": [
+    {
+      "url": "http://localhost:5000/api/Test/TestGet?numberOfResponses=20",
+      "method": "get",
+      "expectedResult": {
+        "code": 200,
+        "payload": {
+          "headers": {
+              "Content-Type": "application/json"
+          },
+          "body": [
+            {
+              "index": 1
+            },
+            {
+              "index": 2
+            },
+            {
+              "index": 3
+            },
+            {
+              "index": 4
+            },
+            {
+              "index": 5
+            },
+            {
+              "index": 6
+            },
+            {
+              "index": 7
+            },
+            {
+              "index": 8
+            },
+            {
+              "index": 9
+            },
+            {
+              "index": 10
+            },
+            {
+              "index": 11
+            },
+            {
+              "index": 12
+            },
+            {
+              "index": 13
+            },
+            {
+              "index": 14
+            },
+            {
+              "index": 15
+            },
+            {
+              "index": 16
+            },
+            {
+              "index": 17
+            },
+            {
+              "index": 18
+            },
+            {
+              "index": 19
+            },
+            {
+              "index": 20
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+
+  "requests": [
+    {
+      "pre": [
+        {
+          "url": "http://localhost:5000/api/test/things/123",
+          "method": "put",
+          "payload": {
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "id": "123",
+              "what": "test prerequests"
+            }
+          }
+        }
+      ],
+      "url": "http://localhost:5000/api/test/things/123",
+      "method": "get",
+      "expectedresult": {
+        "code": 200,
+        "payload": {
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "id": "123",
+            "what": "test prerequests"
+          }
+        }
+      }
+    }
+  ]
+}

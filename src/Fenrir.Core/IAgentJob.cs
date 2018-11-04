@@ -6,8 +6,7 @@ namespace Fenrir.Core
 {
     public interface  IAgentJob
     {
-        Task<IAgentJob> Init(int index, AgentThreadResult agentThreadResult);
-        Task DoWork();
-        AgentThreadResult GetResults();
+        Task<IAgentJob> InitAsync(int index, AgentThreadResult agentThreadResult);
+        Task<AgentThreadResult> DoWork();
     }
 }

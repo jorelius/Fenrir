@@ -20,9 +20,15 @@ namespace Fenrir.Core
 
         public RequestTreeAgent(JsonHttpRequestTree requestTree)
         {
+            _client = new HttpClient();
             _requestTree = requestTree;
         }
         
+        public Task<AgentResult> Run(int threads)
+        {
+            return Run(threads, new CancellationToken()); 
+        }
+
         public async Task<AgentResult> Run(int threads, CancellationToken cancellationToken)
         {
             var flattenedTree = Flatten(_requestTree.Requests);
@@ -34,13 +40,13 @@ namespace Fenrir.Core
             // flatten the tree and "do the work"
             foreach(var requests in flattenedTree)
             {
+                var i = 0;
                 var jobSet = requests.Select(r => {
-                    return new HttpClientAgentJob(_client, r.ToHttpRequestMessage());
+                    return new HttpClientAgentJob(i, _client, r.ToHttpRequestMessage(), new AgentThreadResult());
                 });
 
-                await Task.WhenAll(jobSet.Select(j => j.DoWork()));
-
-                var agentThreadResults = jobSet.Select(j => j.GetResults()); 
+                var agentThreadResults = await Task.WhenAll(jobSet.Select(job => job.DoWork()));
+                
                 results.AddRange(agentThreadResults); 
             }
 

@@ -78,7 +78,7 @@ namespace Fenrir.Core
 
             try
             {
-                job = await _AgentJob.Init(AgentIndex, AgentThreadResult);
+                job = await _AgentJob.InitAsync(AgentIndex, AgentThreadResult);
             }
             catch (Exception)
             {
@@ -88,11 +88,12 @@ namespace Fenrir.Core
                 return;
             }
 
+            AgentThreadResult result = null;
             while (!cancellationToken.IsCancellationRequested && duration.TotalMilliseconds > sw.Elapsed.TotalMilliseconds)
             {
                 try
                 {
-                    await job.DoWork();
+                    result = await job.DoWork();
                 }
                 catch (Exception)
                 {
@@ -100,21 +101,22 @@ namespace Fenrir.Core
                 }
             }
             
-            results.Enqueue(job.GetResults());
+            results.Enqueue(result);
             resetEvent.Set();
         }
 
         private async Task DoWork_Count(int count, ConcurrentQueue<AgentThreadResult> results, CancellationToken cancellationToken, ManualResetEventSlim resetEvent, int AgentIndex)
         {
             var AgentThreadResult = new AgentThreadResult();
-            var job = await _AgentJob.Init(AgentIndex, AgentThreadResult);
+            var job = await _AgentJob.InitAsync(AgentIndex, AgentThreadResult);
 
+            AgentThreadResult result = null;
             for (var i = 0; i < count && !cancellationToken.IsCancellationRequested; i++)
             {
-                await job.DoWork();
+                result = await job.DoWork();
             }
 
-            results.Enqueue(job.GetResults());
+            results.Enqueue(result);
             resetEvent.Set();
         }
     }

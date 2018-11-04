@@ -46,12 +46,12 @@ namespace Fenrir.Core.Models
             RequestsPerSecond = Count / (Elapsed.TotalMilliseconds / 1000);
             BytesPrSecond = items.Sum(s => s.Bytes) / (Elapsed.TotalMilliseconds / 1000);
 
-            foreach (var statusCode in items.SelectMany(s => s.StatusCodes))
+            foreach (var statusCode in atResult.StatusCodes.SelectMany(s => s))
             {
                if (StatusCodes.ContainsKey(statusCode))
-                   StatusCodes[statusCode] += statusCode;
+                   StatusCodes[statusCode] += 1;
                else
-                   StatusCodes.Add(statusCode, statusCode);
+                   StatusCodes.Add(statusCode, 1);
             }
 
             // foreach (var exception in items.SelectMany(s => s.Exceptions))
