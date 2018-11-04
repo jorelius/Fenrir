@@ -16,7 +16,6 @@ namespace Fenrir.Core
     {
         private HttpClient _client;
         private readonly JsonHttpRequestTree _requestTree;
-        private List<Request[]> _requestSets; 
 
         public RequestTreeAgent(JsonHttpRequestTree requestTree)
         {
@@ -36,18 +35,17 @@ namespace Fenrir.Core
 
             var sw = new Stopwatch();
             sw.Start();
-
+            
             // flatten the tree and "do the work"
-            foreach(var requests in flattenedTree)
+            foreach (var requests in flattenedTree)
             {
-                var i = 0;
                 var jobSet = requests.Select(r => {
-                    return new HttpClientAgentJob(i, _client, r.ToHttpRequestMessage(), new AgentThreadResult());
+                    return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult());
                 });
 
                 var agentThreadResults = await Task.WhenAll(jobSet.Select(job => job.DoWork()));
                 
-                results.AddRange(agentThreadResults); 
+                results.AddRange(agentThreadResults);
             }
 
             // compile results

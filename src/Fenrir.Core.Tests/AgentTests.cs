@@ -56,6 +56,8 @@ namespace Fenrir.Core.Tests
             var result = await agent.Run(1);
 
             Assert.True(result != null);
+            Assert.True(result.StatusCodes[201] == 1);
+            Assert.True(result.StatusCodes[200] == 1);
         }
     }
 }
