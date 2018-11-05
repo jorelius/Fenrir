@@ -40,7 +40,7 @@ namespace Fenrir.Core
             foreach (var requests in flattenedTree)
             {
                 var jobSet = requests.Select(r => {
-                    return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult());
+                    return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult(r.Metadata.Id, r.Metadata.ParentId) {});
                 });
 
                 var agentThreadResults = await Task.WhenAll(jobSet.Select(job => job.DoWork()));
@@ -56,17 +56,33 @@ namespace Fenrir.Core
             return AgentResult;
         }
 
-        private List<Request[]> Flatten(Request[] requests)
+        private List<Request[]> Flatten(Request[] requests, string ParentId = null)
         {
             var result = new List<Request[]>();
             foreach(var request in requests)
             {
-                if (request.Pre != null)
+                if (request.Metadata == null)
                 {
-                    result.AddRange(Flatten(request.Pre));
+                    request.Metadata = new Metadata();
                 }
 
-                var single =  new Request[1] { request }; 
+                // set id if non is passed in
+                if (string.IsNullOrWhiteSpace(request.Metadata.Id))
+                {
+                    request.Metadata.Id = Guid.NewGuid().ToString();
+                }
+
+                if (!string.IsNullOrWhiteSpace(ParentId))
+                {
+                    request.Metadata.ParentId = ParentId;
+                }
+
+                if (request.Pre != null)
+                {
+                    result.AddRange(Flatten(request.Pre, request.Metadata.Id));
+                }
+
+                var single =  new Request[1] { request };
                 result.Add(single); 
             }
 

@@ -9,5 +9,6 @@ namespace Fenrir.Core.Models.RequestTree
         public string Method { get; set; }
         public Payload Payload { get; set; }
         public Result ExpectedResult { get; set; }
+        public Metadata Metadata { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Fenrir.Core.Extensions;
 using Fenrir.Core.Models;
 
 namespace Fenrir.Core.Agents
@@ -46,6 +47,8 @@ namespace Fenrir.Core.Agents
                     _agentThreadResult.Add((int)_stopwatch.ElapsedMilliseconds, length, responseTime, _index < 10, code);
                 else
                     _agentThreadResult.AddError((int)_stopwatch.ElapsedMilliseconds, responseTime, _index < 10, code);
+
+                _agentThreadResult.AddResult(await response.ToResult());
             }
 
             return _agentThreadResult;
