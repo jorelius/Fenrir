@@ -41,14 +41,14 @@ namespace Fenrir.Core.Agents
                 var contentStream = await response.Content.ReadAsStreamAsync();
                 var length = contentStream.Length + response.Headers.ToString().Length;
                 var responseTime = (float)_localStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000;
+                
+                _agentThreadResult.AddResult(await response.ToResult());
 
                 var code = (int)response.StatusCode;
                 if ((int)response.StatusCode < 400)
                     _agentThreadResult.Add((int)_stopwatch.ElapsedMilliseconds, length, responseTime, _index < 10, code);
                 else
                     _agentThreadResult.AddError((int)_stopwatch.ElapsedMilliseconds, responseTime, _index < 10, code);
-
-                _agentThreadResult.AddResult(await response.ToResult());
             }
 
             return _agentThreadResult;

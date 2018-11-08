@@ -19,24 +19,24 @@ namespace Fenrir.Core
             _AgentJob = AgentJob;
         }
 
-        public Task<AgentResult> Run(int threads, TimeSpan duration, CancellationToken cancellationToken)
+        public Task<AgentStats> Run(int threads, TimeSpan duration, CancellationToken cancellationToken)
         {
             return Run(threads, duration, null, cancellationToken);
         }
 
-        public Task<AgentResult> Run(int count, CancellationToken cancellationToken)
+        public Task<AgentStats> Run(int count, CancellationToken cancellationToken)
         {
             return Run(1, TimeSpan.MaxValue, count, cancellationToken);
         }
 
-        private Task<AgentResult> Run(int threads, TimeSpan duration, int? count, CancellationToken cancellationToken)
+        private Task<AgentStats> Run(int threads, TimeSpan duration, int? count, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
                 var combinedAgentThreadResult = QueueAgentThreads(threads, duration, count, cancellationToken);
-                var AgentResult = new AgentResult(threads, combinedAgentThreadResult.Elapsed);
-                AgentResult.Process(combinedAgentThreadResult);
-                return AgentResult;
+                var statsResult = new AgentStats(threads);
+                statsResult.Process(combinedAgentThreadResult);
+                return statsResult;
             });
         }
 

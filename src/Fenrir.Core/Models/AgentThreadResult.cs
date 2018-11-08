@@ -7,7 +7,7 @@ namespace Fenrir.Core.Models
     public class AgentThreadResult
     {
         public Dictionary<int, Second> Seconds { get; }
-        public Result Result { get; private set; }
+        public Request Request { get; private set; }
         public string Id { get; } = null;
         public string ParentId { get; } = null;
 
@@ -16,10 +16,9 @@ namespace Fenrir.Core.Models
             Seconds = new Dictionary<int, Second>();
         }
 
-        public AgentThreadResult(string id, string parentId) : this()
+        public AgentThreadResult(Request request) : this()
         {
-            Id = id;
-            ParentId = parentId;
+            Request = request;
         }
 
         public void Add(int elapsed, long bytes, float responsetime, bool trackResponseTime, int statusCode)
@@ -42,9 +41,9 @@ namespace Fenrir.Core.Models
             return second;
         }
 
-        internal void AddResult(Result result)
+        public void AddResult(Result result)
         {
-            Result = result;
+            Request.Metadata.Result = result;
         }
     }
 }
