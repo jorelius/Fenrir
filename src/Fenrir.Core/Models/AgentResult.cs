@@ -7,6 +7,6 @@ namespace Fenrir.Core.Models
     public class AgentResult
     {
         public AgentStats Stats { get; set; }
-        public AgentRequestGrade Gades { get; set; }
+        public AgentRequestGrade Grades { get; set; }
     }
 }

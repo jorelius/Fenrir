@@ -9,6 +9,8 @@ using System.Linq;
 using Fenrir.Core.Models.RequestTree;
 using System.Threading.Tasks;
 using System.Threading;
+using Fenrir.Core.Agents;
+using Fenrir.Core.Extensions;
 
 namespace Fenrir.Core.Tests
 {
@@ -22,42 +24,33 @@ namespace Fenrir.Core.Tests
         }
 
         [Fact]
-        public async Task TestDefaultResponce()
+        public async Task CountLoadTest()
         {
-            var resourceStream = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("Fenrir.Core.Tests.Resources.test-get-20.json");
+            var request = new Request() { Method = "Get", Url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20" };
 
-            JsonHttpRequestTree requestTree;
-            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
-            {
-                requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(reader.ReadToEnd());
-            }
+            var job = new HttpClientAgentJob(new System.Net.Http.HttpClient(), request.ToHttpRequestMessage()); 
+            Agent agent = new Agent(job, request); 
 
-            RequestTreeAgent agent = new RequestTreeAgent(requestTree);
-            var result = await agent.Run(1);
+            var stats = await agent.Run(10, new CancellationToken());
 
-            Assert.True(result != null);
-            Assert.True(result.Stats.StatusCodes[200] == 1);
+            Assert.True(stats != null);
+            Assert.True(stats.StatusCodes[200] == 10);
         }
 
         [Fact]
-        public async Task TestPreRequests()
+        public async Task DurationLoadTest()
         {
-            var resourceStream = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("Fenrir.Core.Tests.Resources.test-pre-then-get.json");
+            var request = new Request() { Method = "Get", Url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20" };
 
-            JsonHttpRequestTree requestTree;
-            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
-            {
-                requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(reader.ReadToEnd());
-            }
+            var job = new HttpClientAgentJob(new System.Net.Http.HttpClient(), request.ToHttpRequestMessage()); 
+            Agent agent = new Agent(job, request); 
 
-            RequestTreeAgent agent = new RequestTreeAgent(requestTree);
-            var result = await agent.Run(1);
+            var stats = await agent.Run(2, TimeSpan.FromSeconds(2), new CancellationToken());
 
-            Assert.True(result != null);
-            Assert.True(result.Stats.StatusCodes[201] == 1);
-            Assert.True(result.Stats.StatusCodes[200] == 1);
+            Assert.True(stats != null);
+            Assert.True(stats.Count > 1);
+            Assert.True(stats.StatusCodes[200] > 0);
+            Assert.True(stats.Elapsed > TimeSpan.FromSeconds(.5));
         }
     }
 }

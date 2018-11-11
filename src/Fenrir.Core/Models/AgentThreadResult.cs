@@ -8,8 +8,6 @@ namespace Fenrir.Core.Models
     {
         public Dictionary<int, Second> Seconds { get; }
         public Request Request { get; private set; }
-        public string Id { get; } = null;
-        public string ParentId { get; } = null;
 
         public AgentThreadResult()
         {
@@ -43,7 +41,10 @@ namespace Fenrir.Core.Models
 
         public void AddResult(Result result)
         {
-            Request.Metadata.Result = result;
+            if (Request?.Metadata != null)
+            {
+                Request.Metadata.Result = result;
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Fenrir.Core.Extensions;
 using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;
 
@@ -12,11 +13,13 @@ namespace Fenrir.Core
 {
     public class Agent
     {
-        private readonly IAgentJob _AgentJob;
+        private readonly IAgentJob _job;
+        private readonly Request _request;
 
-        public Agent(IAgentJob AgentJob)
+        public Agent(IAgentJob job, Request request)
         {
-            _AgentJob = AgentJob;
+            _job = job;
+            _request = request; 
         }
 
         public Task<AgentStats> Run(int threads, TimeSpan duration, CancellationToken cancellationToken)
@@ -73,29 +76,30 @@ namespace Fenrir.Core
 
         private async Task DoWork_Duration(TimeSpan duration, Stopwatch sw, ConcurrentQueue<AgentThreadResult> results, CancellationToken cancellationToken, ManualResetEventSlim resetEvent, int AgentIndex)
         {
-            IAgentJob job;
-            var AgentThreadResult = new AgentThreadResult();
-
-            try
-            {
-                job = await _AgentJob.InitAsync(AgentIndex, AgentThreadResult);
-            }
-            catch (Exception)
-            {
-                AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false, 0);
-                results.Enqueue(AgentThreadResult);
-                resetEvent.Set();
-                return;
-            }
+            var AgentThreadResult = new AgentThreadResult(_request);
 
             AgentThreadResult result = null;
             while (!cancellationToken.IsCancellationRequested && duration.TotalMilliseconds > sw.Elapsed.TotalMilliseconds)
             {
                 try
                 {
+                    IAgentJob job;
+
+                    try
+                    {
+                        job = await _job.InitAsync(AgentIndex, _request.ToHttpRequestMessage(), AgentThreadResult);
+                    }
+                    catch (Exception)
+                    {
+                        AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false, 0);
+                        results.Enqueue(AgentThreadResult);
+                        resetEvent.Set();
+                        return;
+                    }
+
                     result = await job.DoWork();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false, 0);
                 }
@@ -107,12 +111,12 @@ namespace Fenrir.Core
 
         private async Task DoWork_Count(int count, ConcurrentQueue<AgentThreadResult> results, CancellationToken cancellationToken, ManualResetEventSlim resetEvent, int AgentIndex)
         {
-            var AgentThreadResult = new AgentThreadResult();
-            var job = await _AgentJob.InitAsync(AgentIndex, AgentThreadResult);
-
+            var AgentThreadResult = new AgentThreadResult(_request);
+            
             AgentThreadResult result = null;
             for (var i = 0; i < count && !cancellationToken.IsCancellationRequested; i++)
             {
+                var job = await _job.InitAsync(AgentIndex, _request.ToHttpRequestMessage(), AgentThreadResult);
                 result = await job.DoWork();
             }
 

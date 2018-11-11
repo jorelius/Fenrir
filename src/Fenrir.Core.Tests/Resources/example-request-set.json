@@ -5,17 +5,17 @@
                 "url":"http://www.example.com/preThings",
                 "verb":"post",
                 "payload": {
-                    "content-type":"application/json",
+                    "content-type": "application/json; charset=utf-8",
                     "body": {
-                        "what":"thing2"
+                        "what": "thing2"
                     }
                 },
                 "result": {
                     "code": 201,
-                    "content-type":"application/json",
+                    "content-type": "application/json; charset=utf-8",
                     "body": {
-                        "id":"*",
-                        "what":"thing2"
+                        "id": "*",
+                        "what": "thing2"
                     }
                 } 
             }
@@ -24,10 +24,10 @@
         "verb":"get",
         "result": {
             "code": 200,
-            "content-type":"application/json",
+            "content-type": "application/json; charset=utf-8",
             "body": {
-                "id":"123",
-                "what":"thing"
+                "id": "123",
+                "what": "thing"
             }
         } 
     },
@@ -40,13 +40,13 @@
                 "what":"thing2"
             }
         },
-        "result": {
-            "code": 201,
-            "content-type":"application/json",
-            "body": {
-                "id":"*",
-                "what":"thing2"
-            }
-        } 
+      "result": {
+        "code": 201,
+        "content-type": "application/json; charset=utf-8",
+        "body": {
+            "id": "*",
+            "what": "thing2"
+        }
+      } 
     }
 ]

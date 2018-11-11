@@ -5,5 +5,6 @@
         public string Id { get; set; }
         public string ParentId { get; set; }
         public Result Result { get; internal set; }
+        public Grade Grade { get; internal set; }
     }
 }

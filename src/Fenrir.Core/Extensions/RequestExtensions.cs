@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Fenrir.Core.Models.RequestTree;
 
+[assembly: InternalsVisibleTo("Fenrir.Core.Tests")]
 namespace Fenrir.Core.Extensions
 {
     internal static class RequestExtensions

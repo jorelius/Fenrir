@@ -53,7 +53,10 @@ namespace Fenrir.Core
             var statsResult = new AgentStats(threads);
             statsResult.Process(combinedThreadResult);
 
-            return new AgentResult { Stats = statsResult };
+            var gradsResult = new AgentRequestGrade();
+            gradsResult.Process(results); 
+
+            return new AgentResult { Stats = statsResult, Grades = gradsResult };
         }
 
         private List<Request[]> Flatten(Request[] requests, string ParentId = null)
