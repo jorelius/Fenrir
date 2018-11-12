@@ -39,6 +39,11 @@ namespace Fenrir.Core
             // flatten the tree and "do the work"
             foreach (var requests in flattenedTree)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break; 
+                }
+
                 var jobSet = requests.Select(r => {
                     return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult(r) {});
                 });
