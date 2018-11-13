@@ -11,12 +11,12 @@ using Fenrir.Core.Models.RequestTree;
 
 namespace Fenrir.Core
 {
-    public class Agent
+    public class SimpleLoadTestAgent
     {
         private readonly IAgentJob _job;
         private readonly Request _request;
 
-        public Agent(IAgentJob job, Request request)
+        public SimpleLoadTestAgent(IAgentJob job, Request request)
         {
             _job = job;
             _request = request; 
@@ -99,7 +99,7 @@ namespace Fenrir.Core
 
                     result = await job.DoWork();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     AgentThreadResult.AddError((int)sw.ElapsedMilliseconds, 0, false, 0);
                 }

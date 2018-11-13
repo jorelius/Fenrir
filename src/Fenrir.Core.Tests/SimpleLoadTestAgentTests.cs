@@ -14,11 +14,11 @@ using Fenrir.Core.Extensions;
 
 namespace Fenrir.Core.Tests
 {
-    public class AgentTests : IClassFixture<WebServiceFixture>
+    public class SimpleLoadTestAgentTests : IClassFixture<WebServiceFixture>
     {
         WebServiceFixture fixture;
 
-        public AgentTests(WebServiceFixture webServiceFixture)
+        public SimpleLoadTestAgentTests(WebServiceFixture webServiceFixture)
         {
             fixture = webServiceFixture;
         }
@@ -29,7 +29,7 @@ namespace Fenrir.Core.Tests
             var request = new Request() { Method = "Get", Url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20" };
 
             var job = new HttpClientAgentJob(new System.Net.Http.HttpClient(), request.ToHttpRequestMessage()); 
-            Agent agent = new Agent(job, request); 
+            SimpleLoadTestAgent agent = new SimpleLoadTestAgent(job, request); 
 
             var stats = await agent.Run(10, new CancellationToken());
 
@@ -43,7 +43,7 @@ namespace Fenrir.Core.Tests
             var request = new Request() { Method = "Get", Url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20" };
 
             var job = new HttpClientAgentJob(new System.Net.Http.HttpClient(), request.ToHttpRequestMessage()); 
-            Agent agent = new Agent(job, request); 
+            SimpleLoadTestAgent agent = new SimpleLoadTestAgent(job, request); 
 
             var stats = await agent.Run(2, TimeSpan.FromSeconds(2), new CancellationToken());
 
