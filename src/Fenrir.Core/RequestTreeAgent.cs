@@ -9,6 +9,7 @@ using Fenrir.Core.Jobs;
 using Fenrir.Core.Extensions;
 using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;
+using System.Threading.Tasks.Dataflow;
 
 namespace Fenrir.Core
 {
@@ -44,13 +45,30 @@ namespace Fenrir.Core
                     break; 
                 }
 
+                var throttler = new TransformBlock<IAgentJob, AgentThreadResult>(
+                    async job => await job.DoWork(),
+                    new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = threads, CancellationToken = cancellationToken }
+                );
+
+                var buffer = new BufferBlock<AgentThreadResult>(); 
+                throttler.LinkTo(buffer);
+
                 var jobSet = requests.Select(r => {
                     return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult(r) {});
-                });
+                }); 
 
-                var agentThreadResults = await Task.WhenAll(jobSet.Select(job => job.DoWork()));
-                
-                results.AddRange(agentThreadResults);
+                foreach(var job in jobSet)
+                {
+                    throttler.Post(job); 
+                }
+
+                throttler.Complete(); 
+                await throttler.Completion; 
+
+                IList<AgentThreadResult> processed; 
+                buffer.TryReceiveAll(out processed); 
+
+                results.AddRange(processed);
             }
 
             // compile results
