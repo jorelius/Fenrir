@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Fenrir.Core.Agents;
+using Fenrir.Core.Jobs;
 using Fenrir.Core.Extensions;
 using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;

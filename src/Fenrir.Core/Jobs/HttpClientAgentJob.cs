@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Fenrir.Core.Extensions;
 using Fenrir.Core.Models;
 
-namespace Fenrir.Core.Agents
+namespace Fenrir.Core.Jobs
 {
     public class HttpClientAgentJob : IAgentJob
     {

@@ -9,7 +9,7 @@ using System.Linq;
 using Fenrir.Core.Models.RequestTree;
 using System.Threading.Tasks;
 using System.Threading;
-using Fenrir.Core.Agents;
+using Fenrir.Core.Jobs;
 using Fenrir.Core.Extensions;
 
 namespace Fenrir.Core.Tests
