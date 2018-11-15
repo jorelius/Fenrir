@@ -15,13 +15,25 @@ namespace Fenrir.Cli
     {
         static void Main(string[] args)
         {
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication(false);
+
+            app.Name = "fenrir";
+            app.Description = "Service testing tool that compares and load tests microservices.";
+            app.OnExecute(() => {
+                app.ShowHelp();
+                return 1;
+            });
+            
+            app.HelpOption("-? | -h | --help");
+
             app.Command("simple", config => {
                 config.Description = "run simple load test agent";
                 config.HelpOption("-? | -h | --help");
+
                 var threadsOp = config.Option("-t", "number of parallel threads to use", CommandOptionType.SingleValue);
                 var durationOp = config.Option("-d", "length of time", CommandOptionType.SingleValue);
                 var url = config.Argument("url", "load test url", false);
+
                 config.OnExecute(async () => {
                     Uri uri = null;
                     if (string.IsNullOrWhiteSpace(url.Value) || !Uri.TryCreate(url.Value, UriKind.Absolute, out uri))
@@ -63,10 +75,12 @@ namespace Fenrir.Cli
                     return 0; 
                 });
             });
+
             app.Command("request", config => {
                 config.Description = "run request agent";
+                config.HelpOption("-? | -h | --help");
             });
-            app.HelpOption("-? | -h | --help");
+            
             app.Execute(args);
         }
 

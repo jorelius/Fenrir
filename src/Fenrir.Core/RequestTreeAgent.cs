@@ -45,6 +45,7 @@ namespace Fenrir.Core
                     break; 
                 }
 
+                // manage the number of threads with TPL Dataflow
                 var throttler = new TransformBlock<IAgentJob, AgentThreadResult>(
                     async job => await job.DoWork(),
                     new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = threads, CancellationToken = cancellationToken }

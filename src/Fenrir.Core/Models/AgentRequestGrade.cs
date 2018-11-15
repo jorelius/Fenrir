@@ -10,7 +10,11 @@ namespace Fenrir.Core.Models
 {
     public class AgentRequestGrade
     {
-        public IEnumerable<Request> Requests; 
+        public IEnumerable<Request> Requests;
+
+        public int Passed { get; private set; }
+        public int Failed { get; private set; }
+        public int Undefined { get; private set; }
 
         public void Process(IEnumerable<AgentThreadResult> results)
         {
@@ -27,7 +31,20 @@ namespace Fenrir.Core.Models
                     grade = comparer.Compare(result.Request.ExpectedResult, result.Request.Metadata.Result);
                 }
 
-                result.Request.Metadata.Grade = grade; 
+                result.Request.Metadata.Grade = grade;
+
+                if (grade == null)
+                {
+                    Undefined++;
+                }
+                else if (grade.Passed)
+                {
+                    Passed++;
+                }
+                else 
+                {
+                    Failed++;
+                }
             }
 
             // only add root level request with no parents
