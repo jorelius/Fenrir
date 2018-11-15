@@ -8,7 +8,7 @@ using Fenrir.Core.Models.RequestTree;
 [assembly: InternalsVisibleTo("Fenrir.Core.Tests")]
 namespace Fenrir.Core.Extensions
 {
-    internal static class RequestExtensions
+    public static class RequestExtensions
     {
         public static HttpRequestMessage ToHttpRequestMessage(this Request request)
         {
