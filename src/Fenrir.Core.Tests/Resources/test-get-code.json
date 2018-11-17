@@ -1,0 +1,12 @@
+{
+
+  "requests": [
+    {
+      "url": "http://localhost:5000/api/Test/TestGet?numberOfResponses=20",
+      "method": "get",
+      "expectedResult": {
+        "code": 200
+      }
+    }
+  ]
+}

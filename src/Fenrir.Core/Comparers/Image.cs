@@ -3,12 +3,11 @@ using Fenrir.Core.Models.RequestTree;
 
 namespace Fenrir.Core.Comparers
 {
-    public class Image : IResultComparer
+    public class Image : ComparerBase
     {
-        public Grade Compare(Result expected, Result actual)
+        public override bool CalculateGradeBody(dynamic expected, dynamic actual)
         {
-            var pass = expected.Payload.Body == actual.Payload.Body;
-            return new Grade() { Passed = pass, Comment = pass ? "All Good" : "No Good" };
+            return expected == actual;
         }
     }
 }

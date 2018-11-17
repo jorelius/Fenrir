@@ -22,6 +22,26 @@ namespace Fenrir.Core.Tests
         }
 
         [Fact]
+        public async Task OnlyGradeCode()
+        {
+            var resourceStream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("Fenrir.Core.Tests.Resources.test-get-code.json");
+
+            JsonHttpRequestTree requestTree;
+            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
+            {
+                requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(reader.ReadToEnd());
+            }
+
+            RequestTreeAgent agent = new RequestTreeAgent(requestTree);
+            var result = await agent.Run(1);
+
+            Assert.True(result != null);
+            Assert.True(result.Stats.StatusCodes[200] == 1);
+            Assert.True(result.Grades.Requests.ToList().Count == 1);
+        }
+
+        [Fact]
         public async Task RequestTreeAgent()
         {
             var resourceStream = Assembly.GetExecutingAssembly()
