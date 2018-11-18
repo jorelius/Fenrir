@@ -62,18 +62,8 @@ namespace Fenrir.Cli
 
                     var stats = await RunSimpleLoadTestAsync(uri, threads, duration);
 
-                    Console.WriteLine(CliResultViews.StatsResultString,
-                        stats.Count,
-                        stats.Elapsed.TotalSeconds,
-                        stats.RequestsPerSecond,
-                        stats.Bandwidth,
-                        stats.Errors,
-                        stats.Median,
-                        stats.StdDev,
-                        stats.Min,
-                        stats.Max,
-                        GetAsciiHistogram(stats));
-                    
+                    CliResultViews.DrawStats(stats);
+
                     return 0; 
                 });
             });
@@ -108,53 +98,14 @@ namespace Fenrir.Cli
                     var grades = requestResult.Grades;
                     var stats = requestResult.Stats;
 
-                    Console.WriteLine(CliResultViews.GradesResultString, 
-                        grades.Passed, 
-                        grades.Failed, 
-                        grades.Undefined);
-
-                    Console.WriteLine(CliResultViews.StatsResultString,
-                        stats.Count,
-                        stats.Elapsed.TotalSeconds,
-                        stats.RequestsPerSecond,
-                        stats.Bandwidth,
-                        stats.Errors,
-                        stats.Median,
-                        stats.StdDev,
-                        stats.Min,
-                        stats.Max,
-                        GetAsciiHistogram(stats));
+                    CliResultViews.DrawGrades(grades);
+                    CliResultViews.DrawStats(stats);
 
                     return 0;
                 });
             });
             
             app.Execute(args);
-        }
-
-        private static string GetAsciiHistogram(AgentStats stats)
-        {
-            if (stats.Histogram.Length == 0)
-                return string.Empty;
-
-            const string filled = "█";
-            const string empty = " ";
-            var histogramText = new string[7];
-            var max = stats.Histogram.Max();
-
-            foreach (var t in stats.Histogram)
-            {
-                for (var j = 0; j < histogramText.Length; j++)
-                {
-                    histogramText[j] += t > max / histogramText.Length * (histogramText.Length - j - 1) ? filled : empty;
-                }
-            }
-
-            var text = string.Join("\r\n", histogramText);
-            var minText = string.Format("{0:0.000} ms ", stats.Min);
-            var maxText = string.Format(" {0:0.000} ms", stats.Max);
-            text += "\r\n" + minText + new string('=', stats.Histogram.Length - minText.Length - maxText.Length) + maxText;
-            return text;
         }
 
         private static async Task<AgentStats> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration)
