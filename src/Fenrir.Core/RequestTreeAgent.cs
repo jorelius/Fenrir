@@ -83,7 +83,7 @@ namespace Fenrir.Core
             return new AgentResult { Stats = statsResult, Grades = gradsResult };
         }
 
-        private List<Request[]> Flatten(Request[] requests, string ParentId = null)
+        private List<Request[]> Flatten(IEnumerable<Request> requests, string ParentId = null)
         {
             var result = new List<Request[]>();
             foreach(var request in requests)

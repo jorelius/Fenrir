@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fenrir.Core.Tests.Plugin\Fenrir.Core.Tests.Plugin.csproj" />
     <ProjectReference Include="..\Fenrir.Core\Fenrir.Core.csproj" />
   </ItemGroup>
 

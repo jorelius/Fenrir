@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fenrir.Core", "Fenrir.Core\Fenrir.Core.csproj", "{F1DA604A-0E57-419D-BF55-28687E221194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fenrir.Core", "Fenrir.Core\Fenrir.Core.csproj", "{F1DA604A-0E57-419D-BF55-28687E221194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fenrir.Core.Tests", "Fenrir.Core.Tests\Fenrir.Core.Tests.csproj", "{233507EE-0DF8-438B-BEAB-746B60B831A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fenrir.Core.Tests", "Fenrir.Core.Tests\Fenrir.Core.Tests.csproj", "{233507EE-0DF8-438B-BEAB-746B60B831A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fenrir.Cli", "Fenrir.Cli\Fenrir.Cli.csproj", "{DECDD5B6-58DB-4237-A64F-BEC95C64B2CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fenrir.Cli", "Fenrir.Cli\Fenrir.Cli.csproj", "{DECDD5B6-58DB-4237-A64F-BEC95C64B2CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fenrir.Core.Tests.Plugin", "Fenrir.Core.Tests.Plugin\Fenrir.Core.Tests.Plugin.csproj", "{436E4C46-97FE-4950-98C2-614BC0D54222}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F1DA604A-0E57-419D-BF55-28687E221194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +57,23 @@ Global
 		{DECDD5B6-58DB-4237-A64F-BEC95C64B2CD}.Release|x64.Build.0 = Release|Any CPU
 		{DECDD5B6-58DB-4237-A64F-BEC95C64B2CD}.Release|x86.ActiveCfg = Release|Any CPU
 		{DECDD5B6-58DB-4237-A64F-BEC95C64B2CD}.Release|x86.Build.0 = Release|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Debug|x64.Build.0 = Debug|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Debug|x86.Build.0 = Debug|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Release|x64.ActiveCfg = Release|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Release|x64.Build.0 = Release|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Release|x86.ActiveCfg = Release|Any CPU
+		{436E4C46-97FE-4950-98C2-614BC0D54222}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C7466EE7-561B-4405-AB72-8AE36EF3713F}
 	EndGlobalSection
 EndGlobal

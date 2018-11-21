@@ -5,6 +5,6 @@ namespace Fenrir.Core.Models.RequestTree
     public class JsonHttpRequestTree
     {
         public string Description { get; set; }
-        public Request[] Requests { get; set; }
+        public IEnumerable<Request> Requests { get; set; }
     }
 }

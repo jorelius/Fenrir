@@ -17,10 +17,12 @@ namespace Fenrir.Cli
     {
         static void Main(string[] args)
         {
-            var app = new CommandLineApplication(false);
+            var app = new CommandLineApplication(false)
+            {
+                Name = "fenrir",
+                Description = "Service testing tool that compares and load tests microservices."
+            };
 
-            app.Name = "fenrir";
-            app.Description = "Service testing tool that compares and load tests microservices.";
             app.OnExecute(() => {
                 app.ShowHelp();
                 return 1;
@@ -66,7 +68,7 @@ namespace Fenrir.Cli
 
                     return 0; 
                 });
-            });
+            }, false);
 
             app.Command("request", config => {
                 config.Description = "run request agent";
@@ -103,7 +105,7 @@ namespace Fenrir.Cli
 
                     return 0;
                 });
-            });
+            }, false);
             
             app.Execute(args);
         }
