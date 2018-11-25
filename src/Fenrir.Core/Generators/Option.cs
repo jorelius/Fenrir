@@ -2,6 +2,11 @@
 {
     public class Option
     {
+        public Option(OptionDescription description)
+        {
+            Description = description;
+        }
+
         public OptionDescription Description { get; private set; }
 
         private string _value = null;

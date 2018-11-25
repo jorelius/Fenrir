@@ -15,7 +15,7 @@ namespace Fenrir.Core.Tests.Plugin
 
         public List<OptionDescription> OptionDescriptions => new List<OptionDescription> { new OptionDescription("Number", "1", "number of requests") };
 
-        public IEnumerable<Request> Run(List<Option> options)
+        public IEnumerable<Request> Run(Dictionary<string, Option> options)
         {
             throw new NotImplementedException();
         }

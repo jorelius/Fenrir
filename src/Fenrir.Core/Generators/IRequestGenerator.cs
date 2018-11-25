@@ -27,7 +27,7 @@ namespace Fenrir.Core.Generators
 
         List<OptionDescription> OptionDescriptions { get; }
 
-        IEnumerable<Request> Run(List<Option> options);
-}
+        IEnumerable<Request> Run(Dictionary<string, Option> options);
+    }
 
 }
