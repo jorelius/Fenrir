@@ -12,10 +12,13 @@ namespace Fenrir.Core.Tests.Plugin
         public string Name => "Test Plugin";
 
         public string Description => "Provides a Test plugin for unit testing";
+        
+        public List<Option> Options => new List<Option>
+        {
+            new Option(new OptionDescription("Number", "1", "number of requests"))
+        };
 
-        public List<OptionDescription> OptionDescriptions => new List<OptionDescription> { new OptionDescription("Number", "1", "number of requests") };
-
-        public IEnumerable<Request> Run(Dictionary<string, Option> options)
+        public IEnumerable<Request> Run()
         {
             throw new NotImplementedException();
         }
