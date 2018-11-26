@@ -37,24 +37,23 @@ namespace Fenrir.Core.Generators
                 Directory.CreateDirectory(PluginDirectory);
             }
 
-            IEnumerable<string> plugins = new List<string>();
+            List<string> plugins = new List<string>();
 
             var pluginDirs = Directory.EnumerateDirectories(PluginDirectory).ToList();
             pluginDirs.Add(PluginDirectory); 
             foreach (var dir in pluginDirs)
             {
                 var files = Directory.EnumerateFiles(dir);
-                plugins = files.Where(f =>
+                plugins.AddRange(files.Where(f =>
                 {
                     var file = new FileInfo(f);
-                    if (file.Extension.Equals(".dll", StringComparison.InvariantCultureIgnoreCase)
-                        && file.Name.ToLowerInvariant().Contains("plugin"))
+                    if (file.Extension.Equals(".dll", StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }
 
                     return false;
-                });
+                }));
             }
 
             //loads a new dll to the current AppDomain.

@@ -1,4 +1,5 @@
-﻿using Fenrir.Core.Models;
+﻿using Fenrir.Core.Generators;
+using Fenrir.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ Latency
 
         internal static void DrawStats(AgentStats stats)
         {
-            Console.WriteLine(CliResultViews.StatsResultString,
+            Console.WriteLine(StatsResultString,
                                 stats.Count,
                                 stats.Elapsed.TotalSeconds,
                                 stats.RequestsPerSecond,
@@ -73,7 +74,7 @@ Grades
 
         internal static void DrawGrades(AgentRequestGrade grades)
         {
-            Console.WriteLine(CliResultViews.GradesResultString,
+            Console.WriteLine(GradesResultString,
                             grades.Passed,
                             grades.Failed,
                             grades.Undefined);
@@ -85,6 +86,36 @@ Running {0}s test with {2} threads @ {1}";
 
         internal const string StartRequestString = @"
 Running request test with {1} threads @ {0}";
+
+
+        internal const string GeneratorResultString = @"
+    Name:           {0}
+    Description:    {1}
+    Options:
+";
+
+        internal const string GeneratorOptionResultString = @"
+        Name:           {0}
+        Description:    {1}
+        DefaultValue:   {2}
+        IsRequired:     {3}
+";
+
+        internal static void DrawGenerator(IRequestGenerator generator)
+        {
+            Console.WriteLine(GeneratorResultString, 
+                generator.Name, 
+                generator.Description); 
+
+            foreach (var option in generator.Options)
+            {
+                Console.WriteLine(GeneratorOptionResultString, 
+                    option.Description.Key, 
+                    option.Description.Description, 
+                    option.Description.DefaultValue, 
+                    option.Description.IsRequired);
+            }
+        }
 
     }
 }
