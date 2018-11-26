@@ -66,8 +66,8 @@ namespace Fenrir.Cli
 
                 var threadsOp = config.Option<int>("-t", "number of parallel threads to use", CommandOptionType.SingleValue);
                 var requestFileOp = config.Option("-f", "path to request tree json file", CommandOptionType.SingleValue);
-                var generatorOp = config.Option("-g", "generator name", CommandOptionType.SingleValue);
-                var extraArg = config.Argument("-e", "extra options", true); 
+                var outputFileOp = config.Option("-o", "path to output json file", CommandOptionType.SingleValue);
+                var generatorArg = config.Argument("generator", "generator name and options", true);
 
                 config.OnExecute(async () => {
 
@@ -80,24 +80,28 @@ namespace Fenrir.Cli
                         requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(json);
                     }
 
-                    if (generatorOp.HasValue())
+                    string generatorName = null;
+                    if (generatorArg.Values != null && generatorArg.Values.Count > 0)
                     {
+                        generatorName = generatorArg.Values[0];
+                        Console.WriteLine(generatorName);
+
                         var loader = new RequestGeneratorPluginLoader();
-                        var requestGenerator = loader.Load().First(g => g.Name.Equals(generatorOp.Value(), StringComparison.InvariantCultureIgnoreCase));
+                        var requestGenerator = loader.Load().First(g => g.Name.Equals(generatorName, StringComparison.InvariantCultureIgnoreCase));
                         var pluginOptions = requestGenerator.Options.ToOptionsDictionary(); 
 
                         // add options
-                        for(int i = 0; i < extraArg.Values.Count; i++)
+                        for(int i = 0; i < generatorArg.Values.Count; i++)
                         {
                             string argument = null;
                             string value = null;
-                            if(extraArg.Values[i].StartsWith("--"))
+                            if(generatorArg.Values[i].StartsWith("#"))
                             {
-                                argument = extraArg.Values[i].TrimStart('-');
-                                value = extraArg.Values[i + 1];
+                                argument = generatorArg.Values[i].TrimStart('#');
+                                value = generatorArg.Values[i + 1];
                             }
 
-                            if(pluginOptions.ContainsKey(argument))
+                            if(!string.IsNullOrWhiteSpace(argument) && pluginOptions.ContainsKey(argument))
                             {
                                 pluginOptions[argument].Value = value; 
                             }
@@ -108,22 +112,42 @@ namespace Fenrir.Cli
                         requestTree = new JsonHttpRequestTree() { Requests = requests, Description = requestGenerator.Name };
                     }
 
-                    Console.WriteLine(CliResultViews.StartRequestString, generatorOp.HasValue() ? generatorOp.Value() : requestFileOp.Value(), threads);
+                    // Draw run header
+                    Console.WriteLine(CliResultViews.StartRequestString, 
+                        string.IsNullOrWhiteSpace(generatorName) 
+                            ? generatorName 
+                            : requestFileOp.Value(), 
+                        threads);
 
                     var requestResult = await RunRequestComparisonAsync(threads, requestTree);
                     var grades = requestResult.Grades;
                     var stats = requestResult.Stats;
 
+                    // Draw Stats
                     CliResultViews.DrawGrades(grades);
                     CliResultViews.DrawStats(stats);
 
+                    var time = DateTime.UtcNow.ToString("yyyyMMddTHHmmss");
                     var result = new JsonHttpRequestTree()
                     {
                         Requests = requestResult.Grades.Requests,
-                        Description = $"{requestTree.Description} : {DateTime.UtcNow}"
+                        Description = $"{requestTree.Description} : {time}"
                     };
-                    
-                    File.WriteAllText("output.json", JsonConvert.SerializeObject(result, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
+
+                    string outputFile = outputFileOp.HasValue() 
+                        ? outputFileOp.Value() 
+                        : $"output-{time}.json";
+
+                    // Draw output file path
+                    Console.WriteLine("Result path: {0}", outputFile); 
+
+                    File.WriteAllText(outputFile, 
+                        JsonConvert.SerializeObject(
+                            result, 
+                            new JsonSerializerSettings()
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            }));
 
                     return 0;
                 });
@@ -146,8 +170,6 @@ namespace Fenrir.Cli
 
             app.Execute(args);
         }
-
-        
 
         private static async Task<AgentStats> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration)
         {
