@@ -13,7 +13,7 @@ namespace Fenrir.Core.Tests.Plugin
 
         public string Description => "Provides a Test plugin for unit testing";
         
-        public List<Option> Options => new List<Option>
+        public List<Option> Options { get; set; } = new List<Option>
         {
             new Option(new OptionDescription("Number", "1", "number of requests"))
         };

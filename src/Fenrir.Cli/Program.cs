@@ -84,14 +84,13 @@ namespace Fenrir.Cli
                     if (generatorArg.Values != null && generatorArg.Values.Count > 0)
                     {
                         generatorName = generatorArg.Values[0];
-                        Console.WriteLine(generatorName);
 
                         var loader = new RequestGeneratorPluginLoader();
                         var requestGenerator = loader.Load().First(g => g.Name.Equals(generatorName, StringComparison.InvariantCultureIgnoreCase));
-                        var pluginOptions = requestGenerator.Options.ToOptionsDictionary(); 
-
+                        var pluginOptions = requestGenerator.Options.ToOptionsDictionary();
+                                                
                         // add options
-                        for(int i = 0; i < generatorArg.Values.Count; i++)
+                        for (int i = 0; i < generatorArg.Values.Count; i++)
                         {
                             string argument = null;
                             string value = null;
@@ -114,7 +113,7 @@ namespace Fenrir.Cli
 
                     // Draw run header
                     Console.WriteLine(CliResultViews.StartRequestString, 
-                        string.IsNullOrWhiteSpace(generatorName) 
+                        !string.IsNullOrWhiteSpace(generatorName) 
                             ? generatorName 
                             : requestFileOp.Value(), 
                         threads);

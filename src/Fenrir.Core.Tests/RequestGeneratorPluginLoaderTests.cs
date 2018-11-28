@@ -25,6 +25,11 @@ namespace Fenrir.Core.Tests
 
             Assert.True(generators != null);
             Assert.True(generators.Count() > 0);
+
+            var generator = generators.First();
+            generator.Options[0].Value = "42";
+
+            Assert.Equal("42", generator.Options[0].Value); 
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Fenrir.Core.Generators
         /// <returns></returns>
         string Description { get; }
 
-        List<Option> Options { get; }
+        List<Option> Options { get; set; }
 
         IEnumerable<Request> Run();
     }
