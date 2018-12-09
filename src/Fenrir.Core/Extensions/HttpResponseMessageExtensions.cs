@@ -8,7 +8,7 @@ using Fenrir.Core.Models.RequestTree;
 
 namespace Fenrir.Core.Extensions
 {
-    internal static class HttpResponseMessageExtensions
+    public static class HttpResponseMessageExtensions
     {
         public async static Task<Result> ToResult(this HttpResponseMessage response)
         {

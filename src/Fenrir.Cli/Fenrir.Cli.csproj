@@ -4,6 +4,12 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    
+    <AssemblyName>fenrir</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>fenrir</ToolCommandName>
+    <Version>0.1.4</Version>
+    <Authors>Jorel Fermin</Authors>
   </PropertyGroup>
 
   <ItemGroup>
