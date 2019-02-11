@@ -39,6 +39,36 @@ Latency
                                 GetAsciiHistogram(stats));
         }
 
+        internal static void DrawStatusCodes(AgentStats stats)
+        {
+            var codes = stats.StatusCodes.OrderByDescending((kv) => kv.Value);
+
+            Console.WriteLine();
+            Console.WriteLine("Http Codes");
+
+            int numCodes = 0; 
+            foreach(var code in codes)
+            {
+                // return top 3
+                if (numCodes >= 3) break; 
+                
+                Console.WriteLine("    {0}s:           {1}", code.Key, code.Value);
+                numCodes ++; 
+            }
+
+            if (codes.Count() > 3)
+            {
+                var remainingCodes = 
+                    codes
+                        .Skip(3)
+                        .Select(kv => kv.Value)
+                        .Aggregate((total, next) => total + next);
+
+
+                Console.WriteLine("    other:           {1}", remainingCodes);
+            }
+        }
+
         private static string GetAsciiHistogram(AgentStats stats)
         {
             if (stats.Histogram.Length == 0)

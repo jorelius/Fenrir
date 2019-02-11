@@ -54,6 +54,7 @@ namespace Fenrir.Cli
 
                     var stats = await RunSimpleLoadTestAsync(uri, threads, duration);
 
+                    CliResultViews.DrawStatusCodes(stats);
                     CliResultViews.DrawStats(stats);
 
                     return 0; 
@@ -124,6 +125,7 @@ namespace Fenrir.Cli
 
                     // Draw Stats
                     CliResultViews.DrawGrades(grades);
+                    CliResultViews.DrawStatusCodes(stats);
                     CliResultViews.DrawStats(stats);
 
                     var time = DateTime.UtcNow.ToString("yyyyMMddTHHmmss");
