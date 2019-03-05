@@ -10,6 +10,7 @@ using Fenrir.Core.Extensions;
 using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;
 using System.Threading.Tasks.Dataflow;
+using System.Net;
 
 namespace Fenrir.Core
 {
@@ -21,6 +22,7 @@ namespace Fenrir.Core
         public RequestTreeAgent(JsonHttpRequestTree requestTree)
         {
             _client = new HttpClient();
+
             _requestTree = requestTree;
         }
         
@@ -47,7 +49,7 @@ namespace Fenrir.Core
 
                 // manage the number of threads with TPL Dataflow
                 var throttler = new TransformBlock<IAgentJob, AgentThreadResult>(
-                    async job => await job.DoWork(),
+                    async job => await job.DoWork().ConfigureAwait(false),
                     new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = threads, CancellationToken = cancellationToken }
                 );
 
@@ -55,7 +57,7 @@ namespace Fenrir.Core
                 throttler.LinkTo(buffer);
 
                 var jobSet = requests.Select(r => {
-                    return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult(r) {});
+                    return new HttpClientAgentJob(0, _client, r.ToHttpRequestMessage(), new AgentThreadResult(r));
                 }); 
 
                 foreach(var job in jobSet)
@@ -64,7 +66,7 @@ namespace Fenrir.Core
                 }
 
                 throttler.Complete(); 
-                await throttler.Completion; 
+                await throttler.Completion.ConfigureAwait(false); 
 
                 IList<AgentThreadResult> processed; 
                 buffer.TryReceiveAll(out processed); 
@@ -86,6 +88,7 @@ namespace Fenrir.Core
         private List<Request[]> Flatten(IEnumerable<Request> requests, string ParentId = null)
         {
             var result = new List<Request[]>();
+            var curRequestRun = new List<Request>();
             foreach(var request in requests)
             {
                 if (request.Metadata == null)
@@ -106,13 +109,27 @@ namespace Fenrir.Core
 
                 if (request.Pre != null)
                 {
+                    // add current request run to result and 
+                    // create new run
+                    if (curRequestRun.Count > 0)
+                    {
+                        result.Add(curRequestRun.ToArray());
+                        curRequestRun = new List<Request>();
+                    }
+
+                    // add higher levels in the request tree
                     result.AddRange(Flatten(request.Pre, request.Metadata.Id));
                 }
 
-                var single =  new Request[1] { request };
-                result.Add(single); 
+                curRequestRun.Add(request);
             }
 
+            // add request run if any
+            if (curRequestRun.Count > 0)
+            {
+                result.Add(curRequestRun.ToArray());
+            }
+            
             return result;
         }
     }

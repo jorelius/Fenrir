@@ -39,13 +39,13 @@ namespace Fenrir.Core.Jobs
         {
             _localStopwatch.Restart();
 
-            using (var response = await _httpClient.SendAsync(_request))
+            using (var response = await _httpClient.SendAsync(_request).ConfigureAwait(false))
             {
-                var contentStream = await response.Content.ReadAsStreamAsync();
+                var contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
                 var length = contentStream.Length + response.Headers.ToString().Length;
                 var responseTime = (float)_localStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000;
                 
-                _agentThreadResult.AddResult(await response.ToResult());
+                _agentThreadResult.AddResult(await response.ToResult().ConfigureAwait(false));
 
                 var code = (int)response.StatusCode;
                 if ((int)response.StatusCode < 400)

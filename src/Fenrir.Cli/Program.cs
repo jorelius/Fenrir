@@ -112,6 +112,11 @@ namespace Fenrir.Cli
                         requestTree = new JsonHttpRequestTree() { Requests = requests, Description = requestGenerator.Name };
                     }
 
+                    if (requestTree == null)
+                    {
+                        throw new ArgumentException("generator or json file must be supplied");
+                    }
+
                     // Draw run header
                     Console.WriteLine(CliResultViews.StartRequestString, 
                         !string.IsNullOrWhiteSpace(generatorName) 

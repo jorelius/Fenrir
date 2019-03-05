@@ -8,7 +8,7 @@
     <AssemblyName>fenrir</AssemblyName>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fenrir</ToolCommandName>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <Authors>Jorel Fermin</Authors>
   </PropertyGroup>
 

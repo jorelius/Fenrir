@@ -30,7 +30,7 @@ namespace Fenrir.Core.Extensions
                 Payload = new Payload
                 {
                     Headers = headers,
-                    Body = await response.Content.ReadAsStringAsync()
+                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false)
                 }
             };
         }
