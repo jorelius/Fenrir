@@ -27,9 +27,13 @@ namespace Fenrir.Core.Tests
             Assert.True(generators.Count() > 0);
 
             var generator = generators.First();
-            generator.Options[0].Value = "42";
+            generator.Options[0].Value = "42"; // number of requests for plugin to return
 
             Assert.Equal("42", generator.Options[0].Value); 
+
+            var results = generator.Run();
+
+            Assert.Equal(42, results.Count());
         }
     }
 }

@@ -20,7 +20,11 @@ namespace Fenrir.Core.Tests.Plugin
 
         public IEnumerable<Request> Run()
         {
-            throw new NotImplementedException();
+            var count = int.Parse(Options[0].Value);
+            for(int i = 0; i < count; i++)
+            {
+                yield return new Request();
+            }
         }
     }
 }
