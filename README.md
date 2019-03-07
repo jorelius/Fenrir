@@ -2,7 +2,7 @@
 
 ## Purpose ##
 
-Fenrir is a service testing framework that compares results of micro-services. Requests are generated from data sources (web-service, database, flat file, etc.) or predefined in json following comparable request format. It supports image, json, xml, and text comparison sources. It is meant to be flexible and to be integrated into development pipelines.
+Fenrir is a service testing framework that load tests, stresses, and compares results of micro-services. Requests are generated from data sources (web-service, database, flat file, etc.) or predefined in json following comparable request format. It supports image, json, xml, and text comparison targets. It is meant to be flexible and to be integrated into development pipelines.
 
 ## Console ##
 
