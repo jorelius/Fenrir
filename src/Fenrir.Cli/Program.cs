@@ -29,7 +29,7 @@ namespace Fenrir.Cli
                 return 1;
             });
             
-            app.HelpOption("-? | -h | --help");
+            app.HelpOption("-? | -h | --help", true);
 
             app.Command("simple", config => {
                 config.Description = "run simple load test agent";
@@ -86,9 +86,8 @@ namespace Fenrir.Cli
                     {
                         generatorName = generatorArg.Values[0];
 
-                        var loader = new RequestGeneratorPluginLoader();
+                        var loader = new RequestGeneratorPluginLoader(PluginDir());
                         var requestGenerator = loader.Load().First(g => g.Name.Equals(generatorName, StringComparison.InvariantCultureIgnoreCase));
-                        var pluginOptions = requestGenerator.Options.ToOptionsDictionary();
                                                 
                         // add options
                         for (int i = 0; i < generatorArg.Values.Count; i++)
@@ -101,9 +100,11 @@ namespace Fenrir.Cli
                                 value = generatorArg.Values[i + 1];
                             }
 
-                            if(!string.IsNullOrWhiteSpace(argument) && pluginOptions.ContainsKey(argument))
+                            int index = -1;
+                            if(!string.IsNullOrWhiteSpace(argument) 
+                                && (index = requestGenerator.Options.FindLastIndex(o => o.Description.Key.Equals(argument))) > -1)
                             {
-                                pluginOptions[argument].Value = value; 
+                                requestGenerator.Options[index].Value = value; 
                             }
                         }
 
@@ -164,7 +165,7 @@ namespace Fenrir.Cli
                 config.HelpOption("-? | -h | --help");
                 
                 config.OnExecute(async () => {
-                    var loader = new RequestGeneratorPluginLoader();
+                    var loader = new RequestGeneratorPluginLoader(PluginDir());
                     foreach(var generator in loader.Load())
                     {
                         CliResultViews.DrawGenerator(generator); 
@@ -174,7 +175,19 @@ namespace Fenrir.Cli
                 });
             }, false);
 
+            try 
+            {
             app.Execute(args);
+        }
+            catch (CommandParsingException ex)
+            {
+                // "Unrecognized command or argument '<invalid-command>'"
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to execute: {0}", ex.Message);
+            }
         }
 
         private static async Task<AgentStats> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration)
@@ -195,6 +208,18 @@ namespace Fenrir.Cli
         {
             var agent = new RequestTreeAgent(requestTree);
             return await agent.Run(threads, new System.Threading.CancellationToken());
+        }
+
+        public static string PluginDir()
+        {
+            var path = Path.GetFullPath(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".fenrir/plugins"));
+                   
+            if (!Directory.Exists(path))
+            {
+                throw new ArgumentException($"plugin path ( {path} ) does not exist");
+            }
+            
+            return path;
         }
     }
 }

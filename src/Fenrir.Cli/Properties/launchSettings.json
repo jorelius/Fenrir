@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Fenrir.Cli": {
-      "commandName": "Project",
-      "commandLineArgs": "-?"
+      "commandName": "Project"
     }
   }
 }
