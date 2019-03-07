@@ -177,8 +177,8 @@ namespace Fenrir.Cli
 
             try 
             {
-            app.Execute(args);
-        }
+                app.Execute(args);
+            }
             catch (CommandParsingException ex)
             {
                 // "Unrecognized command or argument '<invalid-command>'"
