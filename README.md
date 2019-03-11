@@ -1,4 +1,6 @@
 # Fenrir #
+[![NuGet](https://img.shields.io/nuget/v/fenrir.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/fenrir/)
+[![NuGet](https://img.shields.io/nuget/v/fenrir.core.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/fenrir.core/)
 
 ## Purpose ##
 
