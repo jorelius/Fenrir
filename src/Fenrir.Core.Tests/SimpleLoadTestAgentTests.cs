@@ -27,36 +27,6 @@ namespace Fenrir.Core.Tests
         [Fact]
         public async Task CountLoadTest()
         {
-            var request = new Request() { Method = "Get", Url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20" };
-
-            var job = new HttpClientAgentJob(new System.Net.Http.HttpClient(), request.ToHttpRequestMessage()); 
-            SimpleLoadTestAgent agent = new SimpleLoadTestAgent(job, request); 
-
-            var stats = await agent.Run(10, new CancellationToken());
-
-            Assert.True(stats != null);
-            Assert.True(stats.StatusCodes[200] == 10);
-        }
-
-        [Fact]
-        public async Task DurationLoadTest()
-        {
-            var request = new Request() { Method = "Get", Url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20" };
-
-            var job = new HttpClientAgentJob(new System.Net.Http.HttpClient(), request.ToHttpRequestMessage()); 
-            SimpleLoadTestAgent agent = new SimpleLoadTestAgent(job, request); 
-
-            var stats = await agent.Run(2, TimeSpan.FromSeconds(2), new CancellationToken());
-
-            Assert.True(stats != null);
-            Assert.True(stats.Count > 1);
-            Assert.True(stats.StatusCodes[200] > 0);
-            Assert.True(stats.Elapsed > TimeSpan.FromSeconds(.5));
-        }
-
-        [Fact]
-        public async Task CountGeneratorLoadTest()
-        {
             var url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20";
 
             var generator = new SimpleLoadTestGenerator();
@@ -74,7 +44,7 @@ namespace Fenrir.Core.Tests
         }
 
         [Fact]
-        public async Task DurationGeneratorLoadTest()
+        public async Task DurationLoadTest()
         {
             var url = @"http://localhost:5000/api/Test/TestGet?numberOfResponses=20";
 

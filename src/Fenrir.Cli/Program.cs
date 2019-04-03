@@ -52,10 +52,10 @@ namespace Fenrir.Cli
 
                     Console.WriteLine(CliResultViews.StartSimpleWithDurationString, duration.TotalSeconds, uri, threads);
 
-                    var stats = await RunSimpleLoadTestAsync(uri, threads, duration);
+                    var requestResult = await RunSimpleLoadTestAsync(uri, threads, duration);
 
-                    CliResultViews.DrawStatusCodes(stats);
-                    CliResultViews.DrawStats(stats);
+                    CliResultViews.DrawStatusCodes(requestResult.Stats);
+                    CliResultViews.DrawStats(requestResult.Stats);
 
                     return 0; 
                 });
@@ -190,18 +190,22 @@ namespace Fenrir.Cli
             }
         }
 
-        private static async Task<AgentStats> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration)
+        private static async Task<AgentResult> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration)
         {
-            var request = new Request
+            var generator = new SimpleLoadTestGenerator(); 
+            
+            var durationOption = generator.Options.First(o => o.Description.Key == "Duration");
+            durationOption.Value = duration.Seconds.ToString();
+
+            var urlOption = generator.Options.First(o => o.Description.Key == "Url");
+            urlOption.Value = uri.AbsoluteUri;
+
+            var tree = new JsonHttpRequestTree()
             {
-                Url = uri.AbsoluteUri,
-                Method = "get"
-            }; 
+                Requests = generator.Run()
+            };
 
-            IAgentJob job = new HttpClientAgentJob(new HttpClient(), request.ToHttpRequestMessage()); 
-            var agent = new SimpleLoadTestAgent(job, request);
-
-            return await agent.Run(threads, duration, new System.Threading.CancellationToken()); 
+            return await RunRequestComparisonAsync(threads, tree);
         }
 
         private static async Task<AgentResult> RunRequestComparisonAsync(int threads, JsonHttpRequestTree requestTree)

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Fenrir.Core.Generators
 {
-    public class SimpleLoadTestGenerator : IRequestGenerator
+    public class SimpleLoadTestGenerator
     {
         public Guid Id => Guid.Parse("158add24-8371-4ff7-999c-e9622df6bf9d");
 
