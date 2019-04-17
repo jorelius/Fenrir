@@ -17,9 +17,9 @@ namespace Fenrir.Core
     public class RequestTreeAgent
     {
         private readonly HttpClient _client;
-        private readonly JsonHttpRequestTree _requestTree;
+        private readonly HttpRequestTree _requestTree;
 
-        public RequestTreeAgent(JsonHttpRequestTree requestTree)
+        public RequestTreeAgent(HttpRequestTree requestTree)
         {
             _client = new HttpClient();
 

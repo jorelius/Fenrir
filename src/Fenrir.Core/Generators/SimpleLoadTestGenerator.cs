@@ -79,7 +79,7 @@ namespace Fenrir.Core.Generators
             if ( string.IsNullOrWhiteSpace(path) && File.Exists(path) )
             {
                 string json = File.ReadAllText(path);
-                JsonHttpRequestTree requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(json);
+                HttpRequestTree requestTree = JsonConvert.DeserializeObject<HttpRequestTree>(json);
                 srcRequests = requestTree.Requests.ToList();
             }
 
@@ -98,7 +98,6 @@ namespace Fenrir.Core.Generators
                 {
                     i++;
                 }
-
                 yield return ProvideRequest(srcRequests, i);
             }
         }

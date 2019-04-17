@@ -27,10 +27,10 @@ namespace Fenrir.Core.Tests
             var resourceStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream("Fenrir.Core.Tests.Resources.test-get-code.json");
 
-            JsonHttpRequestTree requestTree;
+            HttpRequestTree requestTree;
             using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
             {
-                requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(reader.ReadToEnd());
+                requestTree = JsonConvert.DeserializeObject<HttpRequestTree>(reader.ReadToEnd());
             }
 
             RequestTreeAgent agent = new RequestTreeAgent(requestTree);
@@ -47,10 +47,10 @@ namespace Fenrir.Core.Tests
             var resourceStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream("Fenrir.Core.Tests.Resources.test-get-20.json");
 
-            JsonHttpRequestTree requestTree;
+            HttpRequestTree requestTree;
             using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
             {
-                requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(reader.ReadToEnd());
+                requestTree = JsonConvert.DeserializeObject<HttpRequestTree>(reader.ReadToEnd());
             }
 
             RequestTreeAgent agent = new RequestTreeAgent(requestTree);
@@ -67,10 +67,10 @@ namespace Fenrir.Core.Tests
             var resourceStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream("Fenrir.Core.Tests.Resources.test-pre-then-get.json");
 
-            JsonHttpRequestTree requestTree;
+            HttpRequestTree requestTree;
             using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
             {
-                requestTree = JsonConvert.DeserializeObject<JsonHttpRequestTree>(reader.ReadToEnd());
+                requestTree = JsonConvert.DeserializeObject<HttpRequestTree>(reader.ReadToEnd());
             }
 
             RequestTreeAgent agent = new RequestTreeAgent(requestTree);
