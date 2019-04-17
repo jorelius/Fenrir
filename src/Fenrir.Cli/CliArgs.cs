@@ -50,21 +50,24 @@ namespace Fenrir.Cli
             var requestGenerator = loader.Load().First(g => g.Name.Equals(args.Name, StringComparison.InvariantCultureIgnoreCase));
 
             // add options
-            for (int i = 0; i < args.Arguments.Count; i++)
+            if (args.Arguments != null && args.Arguments.Count > 0)
             {
-                string argument = null;
-                string value = null;
-                if (args.Arguments[i].StartsWith("#"))
+                for (int i = 0; i < args.Arguments.Count; i++)
                 {
-                    argument = args.Arguments[i].TrimStart('#');
-                    value = args.Arguments[i + 1];
-                }
+                    string argument = null;
+                    string value = null;
+                    if (args.Arguments[i].StartsWith("#"))
+                    {
+                        argument = args.Arguments[i].TrimStart('#');
+                        value = args.Arguments[i + 1];
+                    }
 
-                int index = -1;
-                if (!string.IsNullOrWhiteSpace(argument)
-                    && (index = requestGenerator.Options.FindLastIndex(o => o.Description.Key.Equals(argument))) > -1)
-                {
-                    requestGenerator.Options[index].Value = value;
+                    int index = -1;
+                    if (!string.IsNullOrWhiteSpace(argument)
+                        && (index = requestGenerator.Options.FindLastIndex(o => o.Description.Key.Equals(argument))) > -1)
+                    {
+                        requestGenerator.Options[index].Value = value;
+                    }
                 }
             }
 
@@ -72,7 +75,6 @@ namespace Fenrir.Cli
 
             HttpRequestTree requestTree = new HttpRequestTree() { Requests = requests, Description = requestGenerator.Name };
             await RunRequestTreeAgent(requestTree, args.Concurrency, requestGenerator.Name, args.OutputFilePath);
-
         }
 
         [ArgActionMethod, ArgDescription("run request agent"), ArgShortcut("r")]
@@ -135,7 +137,7 @@ namespace Fenrir.Cli
                 Description = $"{requestTree.Description} : {time}"
             };
 
-            string outputFile = string.IsNullOrWhiteSpace(outputFilePath)
+            string outputFile = !string.IsNullOrWhiteSpace(outputFilePath)
                 ? outputFilePath
                 : $"output-{time}.json";
 
