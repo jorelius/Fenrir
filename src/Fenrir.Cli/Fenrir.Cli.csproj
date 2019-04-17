@@ -22,7 +22,9 @@ This is the dotnet tool.</Description>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="12.1.2" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
+    <PackageReference Include="PowerArgs" Version="3.6.0" />
   </ItemGroup>
 
   <ItemGroup>
