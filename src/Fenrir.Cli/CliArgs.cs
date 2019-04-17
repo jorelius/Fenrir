@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fenrir.Cli
@@ -26,7 +27,7 @@ namespace Fenrir.Cli
         {
             Console.WriteLine(CliResultViews.StartSimpleWithDurationString, args.Duration.TotalSeconds, args.Uri, args.Concurrency);
 
-            var requestResult = await RunSimpleLoadTestAsync(args.Uri, args.Concurrency, args.Duration);
+            var requestResult = await RunSimpleLoadTestAsync(args.Uri, args.Concurrency, args.Duration, args.Count);
 
             CliResultViews.DrawStatusCodes(requestResult.Stats);
             CliResultViews.DrawStats(requestResult.Stats);
@@ -150,12 +151,15 @@ namespace Fenrir.Cli
                     }));
         }
 
-        private static async Task<AgentResult> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration)
+        private static async Task<AgentResult> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration, int count)
         {
             var generator = new SimpleLoadTestGenerator();
 
             var durationOption = generator.Options.First(o => o.Description.Key == "Duration");
             durationOption.Value = duration.Seconds.ToString();
+
+            var countOption = generator.Options.First(o => o.Description.Key == "Count");
+            countOption.Value = count.ToString();
 
             var urlOption = generator.Options.First(o => o.Description.Key == "Url");
             urlOption.Value = uri.AbsoluteUri;
@@ -170,8 +174,15 @@ namespace Fenrir.Cli
 
         private static async Task<AgentResult> RunRequestComparisonAsync(int threads, HttpRequestTree requestTree)
         {
+            CancellationTokenSource source = new CancellationTokenSource();
+            var token = source.Token;
+
+            Console.CancelKeyPress += delegate {
+                source.Cancel();
+            };
+
             var agent = new RequestTreeAgent(requestTree);
-            return await agent.Run(threads, new System.Threading.CancellationToken());
+            return await agent.Run(threads, token);
         }
 
         public static string PluginDir()

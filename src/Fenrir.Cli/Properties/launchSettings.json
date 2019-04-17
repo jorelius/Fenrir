@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Fenrir.Cli": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "simple -url http://www.cnet.com -c \"10\""
     }
   }
 }
