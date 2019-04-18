@@ -8,9 +8,9 @@
     <AssemblyName>fenrir</AssemblyName>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fenrir</ToolCommandName>
-    <Version>0.1.8</Version>
+    <Version>0.2.0</Version>
     <Authors>Jorel Fermin</Authors>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/jorelius/Fenrir/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/jorelius/Fenrir</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
@@ -29,6 +29,10 @@ This is the dotnet tool.</Description>
 
   <ItemGroup>
     <ProjectReference Include="..\Fenrir.Core\Fenrir.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
   </ItemGroup>
 
 </Project>
