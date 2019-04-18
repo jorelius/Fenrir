@@ -31,13 +31,13 @@ $ fenrir request -f ./jsonrequest.json -t 20
 Generator Plugin
 
 ```console
-$ fenrir request "Plugin Name" -t 20
+$ fenrir generator "Plugin Name" -t 20
 ```
 
 Simple Load Test
 
 ```console
-$ fenrir simple "http://your.service.io/some/get" -t 20 -d "00:05"
+$ fenrir simple "http://your.service.io/some/get" -t 20 -c 200
 ```
 
 ### Plugins ###
@@ -55,9 +55,11 @@ The console supports plugins that same way the framework does with one caveat, t
 
 RequestTreeAgent
 
-SimpleLoadTestAgent
+At the center of this framework is RequestTreeAgent. Its main function is to take a HttpRequestTree and flattening the tree into sets of parallelizable requests that are then requested at some level of concurrency.  
 
-RequestGeneratorPlugin
+IRequestGenerator
+
+Interface for integrating with Fenrir extension system for 3rd party development of request generators.
 
 ## Comparison Request Json ##
 

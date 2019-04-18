@@ -16,13 +16,13 @@ using System.Threading.Tasks;
 
 namespace Fenrir.Cli
 {
-    [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling), ArgDescription("Service testing tool for load testing, environment comparison, and integration testing microservices.")]
+    [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling), ArgDescription("Service testing tool for load testing, environment comparison, response testing, and integration testing microservices.")]
     public class CliArgs
     {
         [HelpHook, ArgShortcut("-?"), ArgDescription("Shows this help")]
         public bool Help { get; set; }
 
-        [ArgActionMethod, ArgDescription("run simple load test agent"), ArgShortcut("s")]
+        [ArgActionMethod, ArgDescription("Run simple load"), ArgShortcut("s")]
         public async Task Simple(SimpleArgs args)
         {
             Console.WriteLine(CliResultViews.StartSimpleWithDurationString, args.Duration.TotalSeconds, args.Uri, args.Concurrency);
@@ -33,7 +33,7 @@ namespace Fenrir.Cli
             CliResultViews.DrawStats(requestResult.Stats);
         }
 
-        [ArgActionMethod, ArgDescription("list generator plugings")]
+        [ArgActionMethod, ArgDescription("List generator plugings")]
         public void Generators()
         {
             var loader = new RequestGeneratorPluginLoader(PluginDir());
@@ -43,7 +43,7 @@ namespace Fenrir.Cli
             }
         }
 
-        [ArgActionMethod, ArgDescription("run request agent"), ArgShortcut("g")]
+        [ArgActionMethod, ArgDescription("Generate requests using request plugin"), ArgShortcut("g")]
         public async Task Generator(GeneratorArgs args)
         {
             var loader = new RequestGeneratorPluginLoader(PluginDir());
@@ -77,7 +77,7 @@ namespace Fenrir.Cli
             await RunRequestTreeAgent(requestTree, args.Concurrency, requestGenerator.Name, args.OutputFilePath);
         }
 
-        [ArgActionMethod, ArgDescription("run request agent"), ArgShortcut("r")]
+        [ArgActionMethod, ArgDescription("Generate requests from file or pipe"), ArgShortcut("r")]
         public async Task Request(RequestArgs args)
         {
             HttpRequestTree requestTree = null;
