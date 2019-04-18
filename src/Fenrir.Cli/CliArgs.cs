@@ -193,7 +193,16 @@ namespace Fenrir.Cli
 
             if (!Directory.Exists(path))
             {
-                throw new ArgumentException($"plugin path ( {path} ) does not exist");
+                // create directory
+                try
+                {
+                    Directory.CreateDirectory(path);
+                    Console.WriteLine($"Creating plugin directory: {path}");
+                } 
+                catch (UnauthorizedAccessException e)
+                {
+                    Console.WriteLine($"Failed to create plugin directory: {path}");
+                }
             }
 
             return path;
