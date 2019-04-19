@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace Fenrir.Cli
 {
+    [TabCompletion]
     public class GeneratorArgs
     {
-        [ArgRequired, ArgDescription("generator name"), ArgPosition(1)]
+        [ArgRequired, ArgDescription("generator name"), ArgShortcut("n"), ArgPosition(1)]
+        [ArgumentAwareTabCompletion(typeof(GeneratorNameCompletionSource))]
         public string Name { get; set; }
 
         [ArgDescription("generator arguments"), ArgShortcut("a")]

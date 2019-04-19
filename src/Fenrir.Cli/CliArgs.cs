@@ -16,7 +16,12 @@ using System.Threading.Tasks;
 
 namespace Fenrir.Cli
 {
-    [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling), ArgDescription("Service testing tool for load testing, environment comparison, response testing, and integration testing microservices.")]
+    [TabCompletion]
+    [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
+    [ArgDescription("Service testing tool for load testing, environment comparison, response testing, and integration testing microservices.")]
+    [ArgExample("fenrir request -f \"requestjsonfile.json\" -t 100", "", Title = "file request tree example")]
+    [ArgExample("fenrir generator \"Generator Plugin Name\" -a \"#pluginOption\" \"pluginOptionValue\" -t 100", "user created generators with options", Title = "Generator plugin example")]
+    [ArgExample("fenrir simple -url \"https://example.domain/resource/1\" -t 100 -c 10000", "", Title = "simple load test example")]
     public class CliArgs
     {
         [HelpHook, ArgShortcut("-?"), ArgDescription("Shows this help")]
@@ -25,9 +30,9 @@ namespace Fenrir.Cli
         [ArgActionMethod, ArgDescription("Run simple load"), ArgShortcut("s")]
         public async Task Simple(SimpleArgs args)
         {
-            Console.WriteLine(CliResultViews.StartSimpleWithDurationString, args.Duration.TotalSeconds, args.Uri, args.Concurrency);
+            Console.WriteLine(CliResultViews.StartSimpleWithDurationString, args.Duration.TotalSeconds, args.Url, args.Concurrency);
 
-            var requestResult = await RunSimpleLoadTestAsync(args.Uri, args.Concurrency, args.Duration, args.Count);
+            var requestResult = await RunSimpleLoadTestAsync(args.Url, args.Concurrency, args.Duration, args.Count);
 
             CliResultViews.DrawStatusCodes(requestResult.Stats);
             CliResultViews.DrawStats(requestResult.Stats);
