@@ -17,7 +17,5 @@ namespace Fenrir.Cli
 
         [ArgDescription("length of time to run load test"), ArgShortcut("d"), DefaultValue("00:00:30"), ArgIgnore]
         public TimeSpan Duration { get; set; }
-
-
     }
 }
