@@ -40,6 +40,8 @@ Simple Load Test
 $ fenrir simple "http://your.service.io/some/get" -t 20 -c 200
 ```
 
+[help]: https://raw.githubusercontent.com/jorelius/Fenrir/master/src/documentation/fenrir_help.JPG "Fenrir Help"
+
 ### Plugins ###
 
 The console supports plugins that same way the framework does with one caveat, the plugin director is located under the current users home directory in the ".fenrir" sub directory.
