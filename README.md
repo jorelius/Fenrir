@@ -40,7 +40,9 @@ Simple Load Test
 $ fenrir simple "http://your.service.io/some/get" -t 20 -c 200
 ```
 
-[help]: https://raw.githubusercontent.com/jorelius/Fenrir/master/src/documentation/fenrir_help.JPG "Fenrir Help"
+Console Help
+
+![help](https://raw.githubusercontent.com/jorelius/Fenrir/master/documentation/fenrir_help.JPG "Fenrir Help")
 
 ### Plugins ###
 
