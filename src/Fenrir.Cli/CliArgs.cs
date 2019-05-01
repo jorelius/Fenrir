@@ -38,8 +38,8 @@ namespace Fenrir.Cli
             CliResultViews.DrawStats(requestResult.Stats);
         }
 
-        [ArgActionMethod, ArgDescription("List generator plugings")]
-        public void Generators()
+        [ArgActionMethod, ArgDescription("List generator plugins"), ArgShortcut("g")]
+        public void List(ListArgs args)
         {
             var loader = new RequestGeneratorPluginLoader(PluginDir());
             foreach (var generator in loader.Load())
@@ -192,9 +192,10 @@ namespace Fenrir.Cli
             return await agent.Run(threads, token);
         }
 
-        public static string PluginDir()
+        public static string PluginDir(string basePath = null)
         {
-            var path = Path.GetFullPath(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".fenrir/plugins"));
+            basePath = basePath ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var path = Path.GetFullPath(Path.Combine(basePath, ".fenrir/plugins"));
 
             if (!Directory.Exists(path))
             {
