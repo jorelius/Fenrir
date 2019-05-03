@@ -38,7 +38,7 @@ namespace Fenrir.Cli
             CliResultViews.DrawStats(requestResult.Stats);
         }
 
-        [ArgActionMethod, ArgDescription("List generator plugins"), ArgShortcut("g")]
+        [ArgActionMethod, ArgDescription("List generator plugins"), ArgShortcut("l")]
         public void List(ListArgs args)
         {
             var loader = new RequestGeneratorPluginLoader(PluginDir());
