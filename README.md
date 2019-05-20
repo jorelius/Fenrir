@@ -6,6 +6,8 @@
 
 Fenrir is a service testing framework that load tests, stresses, and compares results of micro-services. Requests are generated from data sources (web-service, database, flat file, etc.) or predefined in json following comparable request format. It supports image, json, xml, and text comparison targets. It is meant to be flexible and to be integrated into development pipelines.
 
+![Request Cli](https://raw.githubusercontent.com/jorelius/Fenrir/master/documentation/fenrir_request.JPG "Fenrir request cli")
+
 ## Console ##
 
 Fenrir is packaged as a dotnet console tool. It exposes many of the features the core framework provides. 
