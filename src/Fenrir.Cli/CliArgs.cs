@@ -232,16 +232,19 @@ namespace Fenrir.Cli
         {
             var config = new Configuration
             {
-                Delimiter = "\t"
+                Delimiter = "\t",
+                IgnoreBlankLines = true
             };
 
             using (var reader = new StreamReader(TsvStream))
             using (var csv = new CsvReader(reader, config))
             {
+                csv.Configuration.HasHeaderRecord = true;
+                csv.Configuration.RegisterClassMap<RequestMap>();
                 var records = csv.GetRecords<Request>();
                 return new HttpRequestTree
                 {
-                    Requests = records
+                    Requests = records.ToList()
                 };
             }
         }
