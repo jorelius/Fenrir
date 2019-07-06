@@ -192,6 +192,11 @@ namespace Fenrir.Cli
             return await agent.Run(threads, token);
         }
 
+        /// <summary>
+        /// Creates Plugin directory if none exists
+        /// </summary>
+        /// <param name="basePath"></param>
+        /// <returns></returns>
         public static string PluginDir(string basePath = null)
         {
             basePath = basePath ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -214,12 +219,22 @@ namespace Fenrir.Cli
             return path;
         }
 
+        /// <summary>
+        /// Build HttpRequestTree from json file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         private static HttpRequestTree ReadJson(string path)
         {
             string json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<HttpRequestTree>(json);
         }
 
+        /// <summary>
+        /// Build HttpRequestTree from tsv file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static HttpRequestTree ReadTsv(string path)
         {
             using (var stream = File.OpenRead(path))
