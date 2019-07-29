@@ -20,6 +20,9 @@ namespace Fenrir.Core.Jobs
 
         public HttpClientAgentJob(HttpClient httpClient)
         {
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
+            _localStopwatch = new Stopwatch();
             _httpClient = httpClient;
         }
 
@@ -30,10 +33,7 @@ namespace Fenrir.Core.Jobs
 
         public HttpClientAgentJob(int index, HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult) : this(httpClient, request)
         {
-            _index = index;            
-            _stopwatch = new Stopwatch();
-            _stopwatch.Start();
-            _localStopwatch = new Stopwatch();
+            _index = index;          
             _agentThreadResult = agentThreadResult;
         }
 
