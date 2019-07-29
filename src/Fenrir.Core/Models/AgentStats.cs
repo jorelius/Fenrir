@@ -33,6 +33,7 @@ namespace Fenrir.Core.Models
         public double Min { get; private set; }
         public double Max { get; private set; }
         public int[] Histogram { get; private set; }
+        public int[] TimeSeries { get; private set; }
 
         public double Bandwidth => Math.Round(BytesPrSecond * 8 / 1024 / 1024, MidpointRounding.AwayFromZero);
 
@@ -73,6 +74,7 @@ namespace Fenrir.Core.Models
             Min = responseTimes.First();
             Max = responseTimes.Last();
             Histogram = GenerateHistogram(responseTimes);
+            TimeSeries = GenerateTimeSeries(responseTimes);
         }
 
         private static float[] GetResponseTimes(List<List<float>> items)
@@ -123,6 +125,19 @@ namespace Fenrir.Core.Models
                 result[i] = count;
                 step += divider;
             }
+
+            return result;
+        }
+
+        private int[] GenerateTimeSeries(float[] responeTimes)
+        {
+            var splits = 80;
+            var result = new int[splits];
+
+            if (responeTimes == null || responeTimes.Length < 2)
+                return result;
+
+
 
             return result;
         }
