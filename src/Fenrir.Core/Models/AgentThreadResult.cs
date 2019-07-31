@@ -6,7 +6,14 @@ namespace Fenrir.Core.Models
 {
     public class AgentThreadResult
     {
+        /// <summary>
+        /// Elapsed time frequency
+        /// </summary>
         public Dictionary<int, Second> Seconds { get; }
+
+        /// <summary>
+        /// Request processed
+        /// </summary>
         public Request Request { get; private set; }
 
         public AgentThreadResult()
