@@ -7,43 +7,29 @@ namespace Fenrir.Core.Models
     public class AgentThreadResult
     {
         /// <summary>
-        /// Elapsed time frequency
+        /// Request Stats 
         /// </summary>
-        public Dictionary<int, Second> Seconds { get; }
+        public RequestStats Stats { get; }
 
         /// <summary>
         /// Request processed
         /// </summary>
         public Request Request { get; private set; }
 
-        public AgentThreadResult()
+        public AgentThreadResult(Request request)
         {
-            Seconds = new Dictionary<int, Second>();
-        }
-
-        public AgentThreadResult(Request request) : this()
-        {
+            Stats = new RequestStats();
             Request = request;
         }
 
-        public void Add(int elapsed, long bytes, float responsetime, bool trackResponseTime, int statusCode)
+        public void Add(long bytes, float responsetime, int statusCode)
         {
-            GetItem(elapsed).Add(bytes, responsetime, trackResponseTime, statusCode);
+            Stats.Add(bytes, responsetime, statusCode);
         }
 
-        public void AddError(int elapsed, float responsetime, bool trackResponseTime, int statusCode)
+        public void AddError(float responsetime, int statusCode)
         {
-            GetItem(elapsed).AddError(responsetime, trackResponseTime, statusCode);
-        }
-
-        private Second GetItem(int elapsed)
-        {
-            if (Seconds.ContainsKey(elapsed))
-                return Seconds[elapsed];
-
-            var second = new Second(elapsed);
-            Seconds.Add(elapsed, second);
-            return second;
+            Stats.AddError(responsetime, statusCode);
         }
 
         public void AddResult(Result result)
