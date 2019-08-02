@@ -10,7 +10,6 @@ namespace Fenrir.Core.Jobs
 {
     public class HttpClientAgentJob : IAgentJob
     {
-        private readonly int _index;
         private readonly HttpRequestMessage _request;
         private readonly Stopwatch _stopwatch;
         private readonly Stopwatch _localStopwatch;
@@ -31,9 +30,8 @@ namespace Fenrir.Core.Jobs
             _request = request;
         }
 
-        public HttpClientAgentJob(int index, HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult) : this(httpClient, request)
-        {
-            _index = index;          
+        public HttpClientAgentJob(HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult) : this(httpClient, request)
+        {      
             _agentThreadResult = agentThreadResult;
         }
 
@@ -52,33 +50,18 @@ namespace Fenrir.Core.Jobs
 
                     var code = (int)response.StatusCode;
                     if ((int)response.StatusCode < 400)
-                        _agentThreadResult.Add((int)_stopwatch.ElapsedMilliseconds, length, responseTime, _index < 10, code);
+                        _agentThreadResult.Add(length, _stopwatch.ElapsedMilliseconds, code);
                     else
-                        _agentThreadResult.AddError((int)_stopwatch.ElapsedMilliseconds, responseTime, _index < 10, code);
+                        _agentThreadResult.AddError(_stopwatch.ElapsedMilliseconds, code);
                 }
             } 
             catch (HttpRequestException e) // server may fail to respond because of load 
             {
                 _agentThreadResult.AddResult(new Result { Code = -1 });
-                _agentThreadResult.AddError((int)_stopwatch.ElapsedMilliseconds, responseTime, _index < 10, -1);
+                _agentThreadResult.AddError(responseTime, -1);
             }
 
             return _agentThreadResult;
-        }
-
-        public Task<IAgentJob> InitAsync(int index, HttpRequestMessage request, AgentThreadResult agentThreadResult)
-        {
-            return Task.FromResult<IAgentJob>(new HttpClientAgentJob(index, _httpClient, request, agentThreadResult));
-        }
-
-        public Task<IAgentJob> InitAsync(int index, AgentThreadResult agentThreadResult)
-        {
-            return Task.FromResult<IAgentJob>(new HttpClientAgentJob(index, _httpClient, _request, agentThreadResult));
-        }
-
-        public IAgentJob Init(int index, AgentThreadResult agentThreadResult)
-        {
-            return new HttpClientAgentJob(index, _httpClient, _request, agentThreadResult);
         }
     }
 }
