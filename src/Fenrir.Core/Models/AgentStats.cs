@@ -108,6 +108,24 @@ namespace Fenrir.Core.Models
                 return result;
 
 
+            //for (var i = 0; i < splits; i++)
+            //{
+            //    var count = 0;
+            //    var stepMax = step + divider;
+
+            //    if (i + 1 == splits)
+            //        stepMax = float.MaxValue;
+
+            //    while (y < responeTimes.Length && responeTimes[y] < stepMax)
+            //    {
+            //        y++;
+            //        count++;
+            //    }
+
+            //    result[i] = count;
+            //    step += divider;
+            //}
+
 
             return result;
         }
