@@ -22,14 +22,14 @@ namespace Fenrir.Core.Models
             Request = request;
         }
 
-        public void Add(long bytes, float responsetime, int statusCode)
+        public void Add(long bytes, float responsetime, DateTime startTime, int statusCode)
         {
-            Stats.Add(bytes, responsetime, statusCode);
+            Stats.Add(bytes, responsetime, startTime, statusCode);
         }
 
-        public void AddError(float responsetime, int statusCode)
+        public void AddError(float responsetime, DateTime startTime, int statusCode)
         {
-            Stats.AddError(responsetime, statusCode);
+            Stats.AddError(responsetime, startTime, statusCode);
         }
 
         public void AddResult(Result result)
