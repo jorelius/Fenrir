@@ -11,7 +11,6 @@ namespace Fenrir.Core.Jobs
     public class HttpClientAgentJob : IAgentJob
     {
         private readonly HttpRequestMessage _request;
-        private readonly Stopwatch _stopwatch;
         private readonly Stopwatch _localStopwatch;
         private readonly AgentThreadResult _agentThreadResult;
         private readonly HttpClient _httpClient;
@@ -19,8 +18,6 @@ namespace Fenrir.Core.Jobs
 
         public HttpClientAgentJob(HttpClient httpClient)
         {
-            _stopwatch = new Stopwatch();
-            _stopwatch.Start();
             _localStopwatch = new Stopwatch();
             _httpClient = httpClient;
         }
@@ -38,7 +35,7 @@ namespace Fenrir.Core.Jobs
         public async Task<AgentThreadResult> DoWork()
         {
             _localStopwatch.Restart();
-            var responseTime = (float)_localStopwatch.ElapsedTicks / Stopwatch.Frequency * 1000;
+            
             try 
             {
                 using (var response = await _httpClient.SendAsync(_request).ConfigureAwait(false))
@@ -50,15 +47,15 @@ namespace Fenrir.Core.Jobs
 
                     var code = (int)response.StatusCode;
                     if ((int)response.StatusCode < 400)
-                        _agentThreadResult.Add(length, _stopwatch.ElapsedMilliseconds, code);
+                        _agentThreadResult.Add(length, _localStopwatch.ElapsedMilliseconds, code);
                     else
-                        _agentThreadResult.AddError(_stopwatch.ElapsedMilliseconds, code);
+                        _agentThreadResult.AddError(_localStopwatch.ElapsedMilliseconds, code);
                 }
             } 
             catch (HttpRequestException e) // server may fail to respond because of load 
             {
                 _agentThreadResult.AddResult(new Result { Code = -1 });
-                _agentThreadResult.AddError(responseTime, -1);
+                _agentThreadResult.AddError(_localStopwatch.ElapsedMilliseconds, -1);
             }
 
             return _agentThreadResult;
