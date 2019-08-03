@@ -57,7 +57,7 @@ namespace Fenrir.Core
                 throttler.LinkTo(buffer);
 
                 var jobSet = requests.Select(r => {
-                    return new HttpClientAgentJob(_client, r.ToHttpRequestMessage(), new AgentThreadResult(r));
+                    return new HttpClientAgentJob(_client, r);
                 }); 
 
                 foreach(var job in jobSet)

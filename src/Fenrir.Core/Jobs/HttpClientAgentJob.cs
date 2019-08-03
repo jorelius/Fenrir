@@ -15,21 +15,17 @@ namespace Fenrir.Core.Jobs
         private readonly AgentThreadResult _agentThreadResult;
         private readonly HttpClient _httpClient;
 
-
-        public HttpClientAgentJob(HttpClient httpClient)
-        {
-            _localStopwatch = new Stopwatch();
-            _httpClient = httpClient;
-        }
-
-        public HttpClientAgentJob(HttpClient httpClient, HttpRequestMessage request) : this(httpClient)
-        {
-            _request = request;
-        }
-
-        public HttpClientAgentJob(HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult) : this(httpClient, request)
+        public HttpClientAgentJob(HttpClient httpClient, HttpRequestMessage request, AgentThreadResult agentThreadResult)
         {      
             _agentThreadResult = agentThreadResult;
+            _request = request;
+            _httpClient = httpClient;
+            _localStopwatch = new Stopwatch();
+        }
+
+        public HttpClientAgentJob(HttpClient httpClient, Request request) : this(httpClient, request.ToHttpRequestMessage(), new AgentThreadResult(request))
+        {
+
         }
 
         public async Task<AgentThreadResult> DoWork()
