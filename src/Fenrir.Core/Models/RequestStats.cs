@@ -10,7 +10,7 @@ namespace Fenrir.Core.Models
         public float ResponseTime { get; private set; } = 0;
         public int StatusCode { get; private set; } = -1;
 
-        public DateTime StartTime { get; private set; }
+        public DateTime StartTime { get; private set; } = DateTime.Now;
 
 
         public void Add(long bytes, float responseTime, DateTime startTime, int statusCode)

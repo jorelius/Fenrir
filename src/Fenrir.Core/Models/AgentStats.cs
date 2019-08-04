@@ -29,6 +29,9 @@ namespace Fenrir.Core.Models
         public double Min { get; private set; }
         public double Max { get; private set; }
         public int[] Histogram { get; private set; }
+
+        public DateTime FirstRequestTime { get; private set; }
+        public DateTime LastRequestTime { get; private set; }
         public int[] TimeSeries { get; private set; }
 
         public double Bandwidth => Math.Round(BytesPrSecond * 8 / 1024 / 1024, MidpointRounding.AwayFromZero);
@@ -61,7 +64,11 @@ namespace Fenrir.Core.Models
             Min = responseTimes.First();
             Max = responseTimes.Last();
             Histogram = GenerateHistogram(responseTimes);
-            TimeSeries = GenerateTimeSeries(responseTimes);
+
+            atResult.StartTimes.Sort();
+            FirstRequestTime = atResult.StartTimes.First();
+            LastRequestTime = atResult.StartTimes.Last();
+            TimeSeries = GenerateTimeSeries(atResult.StartTimes);
         }
 
         private int[] GenerateHistogram(float[] responeTimes)
@@ -99,33 +106,37 @@ namespace Fenrir.Core.Models
             return result;
         }
 
-        private int[] GenerateTimeSeries(float[] responeTimes)
+        private int[] GenerateTimeSeries(List<DateTime> startTimes)
         {
             var splits = 80;
             var result = new int[splits];
 
-            if (responeTimes == null || responeTimes.Length < 2)
+            if (startTimes == null || startTimes.Count < 2)
                 return result;
 
+            var max = startTimes.Last();
+            var min = startTimes.First();
+            var divider = new TimeSpan((max - min).Ticks / splits);
+            var step = min;
+            var y = 0;
 
-            //for (var i = 0; i < splits; i++)
-            //{
-            //    var count = 0;
-            //    var stepMax = step + divider;
+            for (var i = 0; i < splits; i++)
+            {
+                var count = 0;
+                var stepMax = step + divider;
 
-            //    if (i + 1 == splits)
-            //        stepMax = float.MaxValue;
+                if (i + 1 == splits)
+                    stepMax = DateTime.Now;
 
-            //    while (y < responeTimes.Length && responeTimes[y] < stepMax)
-            //    {
-            //        y++;
-            //        count++;
-            //    }
+                while (y < startTimes.Count && startTimes[y] < stepMax)
+                {
+                    y++;
+                    count++;
+                }
 
-            //    result[i] = count;
-            //    step += divider;
-            //}
-
+                result[i] = count;
+                step += divider;
+            }
 
             return result;
         }
