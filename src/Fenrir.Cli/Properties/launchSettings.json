@@ -2,7 +2,7 @@
   "profiles": {
     "Fenrir.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "simple -url http://www.cnet.com -c \"10\""
+      "commandLineArgs": "g -n \"Scene Load Test\" -a \"#limit\" \"10\" -t 100"
     }
   }
 }

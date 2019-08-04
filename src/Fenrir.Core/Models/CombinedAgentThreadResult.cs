@@ -11,6 +11,8 @@ namespace Fenrir.Core.Models
         public List<float> ResponseTimes { get; private set; }
         public List<int> StatusCodes { get; private set; }
 
+        public List<DateTime> StartTimes { get; private set; }
+
         public int Count { get; private set; }
         public int Errors { get; private set; }
 
@@ -20,6 +22,7 @@ namespace Fenrir.Core.Models
         {
             RequestStats = new List<RequestStats>();
             ResponseTimes = new List<float>();
+            StartTimes = new List<DateTime>();
             StatusCodes = new List<int>();
             Elapsed = elapsed;
 
@@ -28,6 +31,7 @@ namespace Fenrir.Core.Models
                 ResponseTimes.Add(result.Stats.ResponseTime);
                 StatusCodes.Add(result.Stats.StatusCode);
                 RequestStats.Add(result.Stats);
+                StartTimes.Add(result.Stats.StartTime);
 
                 if (result.Stats.isError)
                 {

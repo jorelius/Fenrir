@@ -22,6 +22,8 @@ Latency
     Max:            {8:0.000} ms
 
 {9}
+
+{10}
 ";
 
         internal static void DrawStats(AgentStats stats)
@@ -36,7 +38,8 @@ Latency
                                 stats.StdDev,
                                 stats.Min,
                                 stats.Max,
-                                GetAsciiHistogram(stats));
+                                GetAsciiHistogram(stats),
+                                GetAsciiStartTimeSeries(stats));
         }
 
         internal static void DrawStatusCodes(AgentStats stats)
@@ -87,13 +90,37 @@ Latency
                 }
             }
 
-            var text = string.Join("\r\n", histogramText);
+            var text = "Latency Histogram\r\n\r\n" + string.Join("\r\n", histogramText);
             var minText = string.Format("{0:0.000} ms ", stats.Min);
             var maxText = string.Format(" {0:0.000} ms", stats.Max);
             text += "\r\n" + minText + new string('=', stats.Histogram.Length - minText.Length - maxText.Length) + maxText;
             return text;
         }
 
+        private static string GetAsciiStartTimeSeries(AgentStats stats)
+        {
+            if (stats.TimeSeries.Length == 0)
+                return string.Empty;
+
+            const string filled = "█";
+            const string empty = " ";
+            var seriesText = new string[7];
+            var max = stats.Histogram.Max();
+
+            foreach (var t in stats.TimeSeries)
+            {
+                for (var j = 0; j < seriesText.Length; j++)
+                {
+                    seriesText[j] += t > max / seriesText.Length * (seriesText.Length - j - 1) ? filled : empty;
+                }
+            }
+
+            var text = "Request Count Over Time\r\n\r\n" + string.Join("\r\n", seriesText);
+            var minText = string.Format("{0} ", stats.FirstRequestTime.ToString("MM/dd HH:mm:ss"));
+            var maxText = string.Format(" {0}", stats.LastRequestTime.ToString("MM/dd HH:mm:ss"));
+            text += "\r\n" + minText + new string('=', stats.TimeSeries.Length - minText.Length - maxText.Length) + maxText;
+            return text;
+        }
 
         internal const string GradesResultString = @"
 Grades
