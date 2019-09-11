@@ -57,22 +57,26 @@ namespace Fenrir.Core.Generators
             }
 
             //loads a new dll to the current AppDomain.
+            List<Assembly> assemblies = new List<Assembly>();
             foreach (var plugin in plugins)
             {
-                var a = Assembly.LoadFile(plugin);
-                foreach (var t in a.GetTypes())
+                var a = Assembly.LoadFrom(plugin);
+                assemblies.Add(a);
+            }
+
+            foreach(Assembly a in assemblies)
+            foreach (var t in a.GetTypes())
+            {
+                if (t.GetInterface(typeof(IRequestGenerator).FullName) != null)
                 {
-                    if (t.GetInterface(typeof(IRequestGenerator).FullName) != null)
+                    try
                     {
-                        try
-                        {
-                            IRequestGenerator pluginClass = Activator.CreateInstance(t) as IRequestGenerator;
-                            generators.Add(pluginClass);
-                        }
-                        catch (Exception e)
-                        {
-                            // can I get a logging framework? 
-                        }
+                        IRequestGenerator pluginClass = Activator.CreateInstance(t) as IRequestGenerator;
+                        generators.Add(pluginClass);
+                    }
+                    catch (Exception e)
+                    {
+                        // can I get a logging framework? 
                     }
                 }
             }
