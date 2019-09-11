@@ -48,7 +48,7 @@ namespace Fenrir.Cli.Tests
                 
             };
 
-            using (var writer = new StreamWriter("d:/test.tsv"))
+            using (var writer = new StreamWriter($"{Path.GetTempPath()}/test.tsv"))
             using (var csv = new CsvWriter(writer, config))
             {
                 csv.Configuration.HasHeaderRecord = true;
