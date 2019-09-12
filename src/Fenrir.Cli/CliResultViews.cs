@@ -68,7 +68,7 @@ Latency
                         .Aggregate((total, next) => total + next);
 
 
-                Console.WriteLine("    other:           {1}", remainingCodes);
+                Console.WriteLine("    other:           {0}", remainingCodes);
             }
         }
 

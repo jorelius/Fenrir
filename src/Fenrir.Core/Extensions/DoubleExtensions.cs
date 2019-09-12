@@ -20,6 +20,19 @@ namespace Fenrir.Core.Extensions
             return (a + b) / 2;
         }
 
+        public static double GetP(this float[] source, double p)
+        {
+            if (p < 0 && p > 100) throw new ArgumentOutOfRangeException("p", p, "must be between or equal to 0 and 100");
+
+            var count = source.Length;
+
+            if (count == 0)
+                return 0;
+
+            var pIdx = (int)Math.Ceiling(count * p / 100);
+            return source[pIdx]; 
+        }
+
         public static double GetStdDev(this float[] source)
         {
             if (source.Length <= 0)
