@@ -8,7 +8,7 @@
     <AssemblyName>fenrir</AssemblyName>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fenrir</ToolCommandName>
-    <Version>0.3.8</Version>
+    <Version>0.3.9</Version>
     <Authors>Jorel Fermin</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl></PackageProjectUrl>
@@ -26,6 +26,7 @@ This is the dotnet tool.</Description>
     <PackageReference Include="CsvHelper" Version="12.1.2" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.5" />
     <PackageReference Include="PowerArgs" Version="3.6.0" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>
