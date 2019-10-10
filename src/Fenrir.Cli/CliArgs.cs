@@ -156,7 +156,7 @@ namespace Fenrir.Cli
                     WriteIndented = true
                 };
 
-                await JsonSerializer.SerializeAsync<AgentResult>(stream, requestResult, options);
+                await JsonSerializer.SerializeAsync<HttpRequestTree>(stream, result, options);
             }
         }
 
