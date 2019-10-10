@@ -4,13 +4,13 @@ using Fenrir.Core;
 using Fenrir.Core.Generators;
 using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;
-using Newtonsoft.Json;
 using PowerArgs;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -125,7 +125,6 @@ namespace Fenrir.Cli
             // Draw run header
             Console.WriteLine(CliResultViews.StartRequestString, requestSource, Concurrency);
 
-
             var requestResult = await RunRequestComparisonAsync(Concurrency, requestTree);
             var grades = requestResult.Grades;
             var stats = requestResult.Stats;
@@ -149,13 +148,16 @@ namespace Fenrir.Cli
             // Draw output file path
             Console.WriteLine("Result path: {0}", outputFile);
 
-            File.WriteAllText(outputFile,
-                JsonConvert.SerializeObject(
-                    result,
-                    new JsonSerializerSettings()
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    }));
+            using (var stream = new FileStream(outputFile, FileMode.CreateNew))
+            {
+                var options = new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                    WriteIndented = true
+                };
+
+                await JsonSerializer.SerializeAsync<AgentResult>(stream, requestResult, options);
+            }
         }
 
         private static async Task<AgentResult> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration, int count)
@@ -227,7 +229,7 @@ namespace Fenrir.Cli
         private static HttpRequestTree ReadJson(string path)
         {
             string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<HttpRequestTree>(json);
+            return JsonSerializer.Deserialize<HttpRequestTree>(json);
         }
 
         /// <summary>
