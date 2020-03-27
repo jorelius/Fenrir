@@ -28,7 +28,10 @@ namespace Fenrir.Core.Generators
 
         public SimpleLoadTestGenerator()
         {
-            client = new HttpClient(); 
+            client = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+            }); 
         }
 
         public IEnumerable<Request> Run()

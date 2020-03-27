@@ -21,7 +21,11 @@ namespace Fenrir.Core
 
         public RequestTreeAgent(HttpRequestTree requestTree)
         {
-            _client = new HttpClient();
+            ServicePointManager.ServerCertificateValidationCallback = (message, certificate2, arg3, arg4) => true;
+            _client = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+            });
 
             _requestTree = requestTree;
         }
