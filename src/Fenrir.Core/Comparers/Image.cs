@@ -5,9 +5,14 @@ namespace Fenrir.Core.Comparers
 {
     public class Image : ComparerBase
     {
-        public override bool CalculateGradeBody(dynamic expected, dynamic actual)
+        public override ComparerResult CalculateGradeBody(dynamic expected, dynamic actual)
         {
-            return expected == actual;
+            if (expected == actual)
+            {
+                return new ComparerResult { Result = true, Cause = "Image bytes[] match" };
+            }
+
+            return new ComparerResult { Result = false, Cause = "Image bytes[] do not match" };
         }
     }
 }
