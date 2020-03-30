@@ -7,9 +7,14 @@ namespace Fenrir.Core.Comparers
 {
     public class Exact : ComparerBase
     {
-        public override bool CalculateGradeBody(dynamic expected, dynamic actual)
+        public override ComparerResult CalculateGradeBody(dynamic expected, dynamic actual)
         {
-            return String.Equals(expected, actual);
+            if (String.Equals(expected, actual))
+            {
+                return new ComparerResult { Result = true, Cause = "matches exactly" };
+            }
+
+            return new ComparerResult { Result = false, Cause = "does not match exactly" };
         }
     }
 }

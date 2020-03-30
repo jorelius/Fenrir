@@ -11,7 +11,7 @@ namespace Fenrir.Core.Comparers
 {
     public class Json : ComparerBase
     {
-        public override bool CalculateGradeBody(dynamic expected, dynamic actual)
+        public override ComparerResult CalculateGradeBody(dynamic expected, dynamic actual)
         {
             var jdp = new JsonDiffPatch();
             var left = JToken.Parse(expected.ToString());
@@ -21,10 +21,10 @@ namespace Fenrir.Core.Comparers
 
             if (patch != null && patch.HasValues)
             {
-                return false;
+                return new ComparerResult { Result = false, Cause = patch.ToString() };
             }
 
-            return true;
+            return new ComparerResult { Result = true, Cause = "Json Matches" };
         }
     }
 }

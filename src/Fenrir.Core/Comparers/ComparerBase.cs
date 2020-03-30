@@ -11,34 +11,37 @@ namespace Fenrir.Core.Comparers
     {
         public Grade Compare(Result expected, Result actual)
         {
-            var pass = CalculateGrade(expected, actual);
-            return new Grade() { Passed = pass, Comment = pass ? "All Good" : "No Good" };
+            ComparerResult result = CalculateGrade(expected, actual);
+            return new Grade() { Passed = result.Result, Comment = result.Cause };
         }
 
-        public bool CalculateGrade(Result expected, Result actual)
+        public ComparerResult CalculateGrade(Result expected, Result actual)
         {
             if (expected.Code != actual.Code)
             {
-                return false;
+                return new ComparerResult { Result = false, Cause = "Http Code Does not Match expected value" };
             }
 
+            // validating against expected header values
+            // can be disabled if expected header values are set to null
             if (expected?.Payload?.Headers != null &&
                 !expected.Payload.Headers
                 .All(h => actual.Payload.Headers.ContainsKey(h.Key)
                     && string.Equals(actual.Payload.Headers[h.Key], h.Value, StringComparison.InvariantCultureIgnoreCase)))
             {
-                return false;
+                return new ComparerResult { Result = false, Cause = "Http result headers do not Match expected values" };;
             }
 
+            ComparerResult result = null; 
             if(expected?.Payload?.Body != null && 
-                !CalculateGradeBody(expected.Payload.Body, actual.Payload.Body))
+                !(result = CalculateGradeBody(expected.Payload.Body, actual.Payload.Body)).Result)
             {
-                return false;
+                return result;
             }
 
-            return true;
+            return new ComparerResult { Result = true, Cause = result?.Cause };
         }
 
-        public abstract bool CalculateGradeBody(dynamic expected, dynamic actual);
+        public abstract ComparerResult CalculateGradeBody(dynamic expected, dynamic actual);
     }
 }
