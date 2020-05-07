@@ -24,13 +24,24 @@ namespace Fenrir.Core.Extensions
                 headers.Add(header.Key, HeaderValueToString(header.Value));
             }
 
+            string body = null;
+            if (ShouldEncodeAsBase64(response.Content.Headers.ContentType.MediaType))
+            {
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                body = Convert.ToBase64String(bytes);
+            }
+            else
+            {
+                body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            }
+
             return new Result
             {
                 Code = (int)response.StatusCode,
                 Payload = new Payload
                 {
                     Headers = headers,
-                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+                    Body = body
                 }
             };
         }
@@ -50,6 +61,28 @@ namespace Fenrir.Core.Extensions
             }
 
             return result;
+        }
+
+
+        private static bool ShouldEncodeAsBase64(string mediaType)
+        {
+            var sanatized = mediaType.ToLowerInvariant();
+            if(sanatized.Contains("json"))
+            {
+                return false;
+            }
+
+            if (sanatized.Contains("xml"))
+            {
+                return false;
+            }
+
+            if (sanatized.Contains("text"))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
