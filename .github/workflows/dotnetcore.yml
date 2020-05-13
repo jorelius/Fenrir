@@ -8,10 +8,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build ./src --configuration Release
+    - name: Test with dotnet
+      run: dotnet test ./src
+
+  publish:
+
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pack Nuget Package
+        run: dotnet pack ./src/Fenrir.sln --configuration Release
+      - name: Push package to Nuget
+        run: dotnet nuget push **/*.nupkg
+              --api-key ${{ secrets.NUGET_DEPLOY_KEY }}
+              --source https://api.nuget.org/v3/index.json
+
+              
