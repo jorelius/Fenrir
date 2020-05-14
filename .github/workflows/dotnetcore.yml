@@ -29,6 +29,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Pack Nuget Package
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.0.100
         run: dotnet pack ./src/Fenrir.sln --configuration Release
       - name: Push package to Nuget
         run: dotnet nuget push **/*.nupkg
