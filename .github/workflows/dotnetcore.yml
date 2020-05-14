@@ -15,10 +15,11 @@ jobs:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build ./src --configuration Release
-    - name: Test with dotnet
+    - name: Setup .NET Core Test Runtime
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.402
+    - name: Test with dotnet
       run: dotnet test ./src
 
   publish:
@@ -28,10 +29,11 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
-      - name: Pack Nuget Package
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.0.100
+      - name: Pack Nuget Package
         run: dotnet pack ./src/Fenrir.sln --configuration Release
       - name: Push package to Nuget
         run: dotnet nuget push **/*.nupkg
