@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Globalization;
 using Xunit;
 
 namespace Fenrir.Cli.Tests
@@ -41,7 +42,7 @@ namespace Fenrir.Cli.Tests
                 }
             };
 
-            var config = new Configuration
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
                 Delimiter = "\t",
                 IgnoreBlankLines = true,

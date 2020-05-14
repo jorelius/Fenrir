@@ -7,6 +7,7 @@ using Fenrir.Core.Models.RequestTree;
 using PowerArgs;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -247,7 +248,7 @@ namespace Fenrir.Cli
 
         public static HttpRequestTree ReadTsv(Stream TsvStream)
         {
-            var config = new Configuration
+            var config = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
                 Delimiter = "\t",
                 IgnoreBlankLines = true
