@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Fenrir.Core</PackageId>
-    <Version>0.1.13</Version>
+    <Version>0.1.14</Version>
     <Authors>Jorel Fermin</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl></PackageProjectUrl>
