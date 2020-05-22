@@ -64,20 +64,22 @@ namespace Fenrir.Core.Generators
                 assemblies.Add(a);
             }
 
-            foreach(Assembly a in assemblies)
-            foreach (var t in a.GetTypes())
+            foreach (Assembly a in assemblies)
             {
-                if (t.GetInterface(typeof(IRequestGenerator).FullName) != null)
+                try
                 {
-                    try
+                    foreach (Type t in a.GetTypes())
                     {
-                        IRequestGenerator pluginClass = Activator.CreateInstance(t) as IRequestGenerator;
-                        generators.Add(pluginClass);
+                        if (t?.GetInterface(typeof(IRequestGenerator).FullName) != null)
+                        {
+                            IRequestGenerator pluginClass = Activator.CreateInstance(t) as IRequestGenerator;
+                            generators.Add(pluginClass);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        // can I get a logging framework? 
-                    }
+                }
+                catch (Exception e)
+                {
+                    // can I get a logging framework? 
                 }
             }
 
