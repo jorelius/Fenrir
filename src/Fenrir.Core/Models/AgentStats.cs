@@ -65,7 +65,7 @@ namespace Fenrir.Core.Models
             Max = responseTimes.Last();
             Histogram = GenerateHistogram(responseTimes);
 
-            atResult.StartTimes.Sort();
+            atResult.StartTimes.Sort((a, b) => a.CompareTo(b));
             FirstRequestTime = atResult.StartTimes.First();
             LastRequestTime = atResult.StartTimes.Last();
             TimeSeries = GenerateTimeSeries(atResult.StartTimes);
