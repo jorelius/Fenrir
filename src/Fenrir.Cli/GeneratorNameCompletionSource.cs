@@ -13,7 +13,7 @@ namespace Fenrir.Cli
 
         private static IEnumerable<string> GeneratorNames()
         {
-            var loader = new RequestGeneratorPluginLoader(CliArgs.PluginDir());
+            var loader = new RequestGeneratorPluginLoader(Controller.PluginDir());
             foreach (var generator in loader.Load())
             {
                 yield return $"\"{generator.Name}\"";

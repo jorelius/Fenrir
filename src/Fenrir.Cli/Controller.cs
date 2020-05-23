@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using Fenrir.Cli.Usecases;
 using Fenrir.Core;
 using Fenrir.Core.Generators;
 using Fenrir.Core.Models;
@@ -23,7 +24,7 @@ namespace Fenrir.Cli
     [ArgExample("fenrir request -f \"requestjsonfile.json\" -t 100", "", Title = "file request tree example")]
     [ArgExample("fenrir generator \"Generator Plugin Name\" -a \"#pluginOption\" \"pluginOptionValue\" -t 100", "user created generators with options", Title = "Generator plugin example")]
     [ArgExample("fenrir simple -url \"https://example.domain/resource/1\" -t 100 -c 10000", "", Title = "simple load test example")]
-    public class CliArgs
+    public class Controller
     {
         [HelpHook, ArgShortcut("-?"), ArgDescription("Shows this help")]
         public bool Help { get; set; }
@@ -52,32 +53,9 @@ namespace Fenrir.Cli
         [ArgActionMethod, ArgDescription("Generate requests using request plugin"), ArgShortcut("g")]
         public async Task Generator(GeneratorArgs args)
         {
-            var loader = new RequestGeneratorPluginLoader(PluginDir());
-            var requestGenerator = loader.Load().First(g => g.Name.Equals(args.Name, StringComparison.InvariantCultureIgnoreCase));
-
-            // add options
-            if (args.Arguments != null && args.Arguments.Count > 0)
-            {
-                for (int i = 0; i < args.Arguments.Count; i++)
-                {
-                    string argument = null;
-                    string value = null;
-                    if (args.Arguments[i].StartsWith("#"))
-                    {
-                        argument = args.Arguments[i].TrimStart('#');
-                        value = args.Arguments[i + 1];
-                    }
-
-                    int index = -1;
-                    if (!string.IsNullOrWhiteSpace(argument)
-                        && (index = requestGenerator.Options.FindLastIndex(o => o.Description.Key.Equals(argument))) > -1)
-                    {
-                        requestGenerator.Options[index].Value = value;
-                    }
-                }
-            }
-
-            var requests = requestGenerator.Run();
+            // Load request generator and apply plugin args
+            IRequestGenerator requestGenerator = new LoadGenerator().Execute(args, PluginDir());
+            IEnumerable<Request> requests = requestGenerator.Run();
 
             HttpRequestTree requestTree = new HttpRequestTree() { Requests = requests, Description = requestGenerator.Name };
             await RunRequestTreeAgent(requestTree, args.Concurrency, requestGenerator.Name, args.OutputFilePath);
@@ -94,7 +72,7 @@ namespace Fenrir.Cli
             {
                 using (Stream pipeStream = Console.OpenStandardInput())
                 {
-                    requestTree = ReadTsv(pipeStream);
+                    requestTree = new LoadHttpRequestTreeFromTsv().Execute(pipeStream);
                 }
             }
 
@@ -104,12 +82,12 @@ namespace Fenrir.Cli
                 try
                 {
                     // try to load json
-                    requestTree = ReadJson(args.RequestFilePath);
+                    requestTree = new LoadHttpRequestTreeFromJson().Execute(args.RequestFilePath);
                 }
                 catch
                 {
                     // try to load tsv
-                    requestTree = ReadTsv(args.RequestFilePath);
+                    requestTree = new LoadHttpRequestTreeFromTsv().Execute(args.RequestFilePath);;
                 }
             }
 
@@ -149,16 +127,7 @@ namespace Fenrir.Cli
             // Draw output file path
             Console.WriteLine("Result path: {0}", outputFile);
 
-            using (var stream = new FileStream(outputFile, FileMode.CreateNew))
-            {
-                var options = new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                    WriteIndented = true
-                };
-
-                await JsonSerializer.SerializeAsync<HttpRequestTree>(stream, result, options);
-            }
+            await new SaveHttpRequestTreeToJson().Execute(result, outputFile);
         }
 
         private static async Task<AgentResult> RunSimpleLoadTestAsync(Uri uri, int threads, TimeSpan duration, int count)
@@ -220,51 +189,6 @@ namespace Fenrir.Cli
             }
 
             return path;
-        }
-
-        /// <summary>
-        /// Build HttpRequestTree from json file
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private static HttpRequestTree ReadJson(string path)
-        {
-            string json = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<HttpRequestTree>(json);
-        }
-
-        /// <summary>
-        /// Build HttpRequestTree from tsv file
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static HttpRequestTree ReadTsv(string path)
-        {
-            using (var stream = File.OpenRead(path))
-            {
-                return ReadTsv(stream);
-            }
-        }
-
-        public static HttpRequestTree ReadTsv(Stream TsvStream)
-        {
-            var config = new CsvConfiguration(CultureInfo.CurrentCulture)
-            {
-                Delimiter = "\t",
-                IgnoreBlankLines = true
-            };
-
-            using (var reader = new StreamReader(TsvStream))
-            using (var csv = new CsvReader(reader, config))
-            {
-                csv.Configuration.HasHeaderRecord = true;
-                csv.Configuration.RegisterClassMap<RequestMap>();
-                var records = csv.GetRecords<Request>();
-                return new HttpRequestTree
-                {
-                    Requests = records.ToList()
-                };
-            }
         }
         #endregion "static helper methods"
     }

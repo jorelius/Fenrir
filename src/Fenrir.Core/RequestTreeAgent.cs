@@ -89,9 +89,14 @@ namespace Fenrir.Core
             return new AgentResult { Stats = statsResult, Grades = gradsResult };
         }
 
-        private List<Request[]> Flatten(IEnumerable<Request> requests, string ParentId = null)
+        /// <summary>
+        /// Flatten request tree such that requests at the same level can run in parallel but 
+        /// sequenced requests (a.k.a. pre requests) run before their parent
+        /// </summary>
+        /// <param name="requests">current set of request to process</param>
+        /// <param name="ParentId">Id of parent request if any</param>
+        private IEnumerable<Request[]> Flatten(IEnumerable<Request> requests, string ParentId = null)
         {
-            var result = new List<Request[]>();
             var curRequestRun = new List<Request>();
             foreach(var request in requests)
             {
@@ -117,12 +122,15 @@ namespace Fenrir.Core
                     // create new run
                     if (curRequestRun.Count > 0)
                     {
-                        result.Add(curRequestRun.ToArray());
+                        yield return curRequestRun.ToArray();
                         curRequestRun = new List<Request>();
                     }
 
                     // add higher levels in the request tree
-                    result.AddRange(Flatten(request.Pre, request.Metadata.Id));
+                    foreach(Request[] resultSet in Flatten(request.Pre, request.Metadata.Id))
+                    {
+                        yield return resultSet;
+                    }
                 }
 
                 curRequestRun.Add(request);
@@ -131,10 +139,8 @@ namespace Fenrir.Core
             // add request run if any
             if (curRequestRun.Count > 0)
             {
-                result.Add(curRequestRun.ToArray());
+                yield return curRequestRun.ToArray();
             }
-            
-            return result;
         }
     }
 }

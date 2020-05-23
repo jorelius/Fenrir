@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Globalization;
 using Xunit;
+using Fenrir.Cli.Usecases;
 
 namespace Fenrir.Cli.Tests
 {
@@ -23,7 +24,7 @@ namespace Fenrir.Cli.Tests
             var resourceStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream($"Fenrir.Cli.Tests.Resources.{resourceName}");
 
-            var requestTree = CliArgs.ReadTsv(resourceStream);
+            var requestTree = new LoadHttpRequestTreeFromTsv().Execute(resourceStream);
 
             Request request = requestTree.Requests.FirstOrDefault();
 
