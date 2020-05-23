@@ -5,6 +5,8 @@
     <PackageId>Fenrir.Core</PackageId>
     <Version>0.1.15</Version>
     <Authors>Jorel Fermin</Authors>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/jorelius/Fenrir</RepositoryUrl>
