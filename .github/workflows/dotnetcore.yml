@@ -1,6 +1,10 @@
 name: .NET Core
 
-on: [push]
+on: 
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -19,6 +23,7 @@ jobs:
       run: dotnet test ./src
 
   publish:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
     needs: build
     runs-on: ubuntu-latest
@@ -28,8 +33,7 @@ jobs:
       - name: Pack Nuget Package
         run: dotnet pack ./src/Fenrir.sln --configuration Release
       - name: Push package to Nuget
-        run: dotnet nuget push **/*.nupkg
-              --api-key ${{ secrets.NUGET_DEPLOY_KEY }}
-              --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./src/Fenrir.Cli/**/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./src/Fenrir.Core/**/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
 
               

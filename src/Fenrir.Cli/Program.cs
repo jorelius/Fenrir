@@ -21,16 +21,16 @@ namespace Fenrir.Cli
     {
         static void Main(string[] args)
         {
-            CliArgs parsed = null;
+            Controller parsed = null;
             try
             {
                 Console.WriteLine();
-                Args.InvokeAction<CliArgs>(args);
+                Args.InvokeAction<Controller>(args);
             }
             catch (ArgException ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.WriteLine(ArgUsage.GenerateUsageFromTemplate<CliArgs>());
+                Console.WriteLine(ArgUsage.GenerateUsageFromTemplate<Controller>());
             }
 
             // exit if help is requested
