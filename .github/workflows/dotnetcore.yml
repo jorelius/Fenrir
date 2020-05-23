@@ -33,7 +33,8 @@ jobs:
       - name: Pack Nuget Package
         run: dotnet pack ./src/Fenrir.sln --configuration Release
       - name: Push package to Nuget
-        run: dotnet nuget push ./src/Fenrir.Cli/**/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
-        run: dotnet nuget push ./src/Fenrir.Core/**/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
+        run: 
+          - dotnet nuget push ./src/Fenrir.Cli/**/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
+          - dotnet nuget push ./src/Fenrir.Core/**/*.nupkg --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
 
               
