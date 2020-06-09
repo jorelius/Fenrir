@@ -72,7 +72,16 @@ namespace Fenrir.Cli
             {
                 using (Stream pipeStream = Console.OpenStandardInput())
                 {
-                    requestTree = new LoadHttpRequestTreeFromTsv().Execute(pipeStream);
+                    try
+                    {
+                        // try load TSV
+                        requestTree = new LoadHttpRequestTreeFromTsv().Execute(pipeStream);
+                    }
+                    catch
+                    {
+                        // try load Url list
+                        requestTree = new LoadHttpRequestTreeFromListOfUrls().Execute(pipeStream);
+                    }
                 }
             }
 
@@ -86,8 +95,16 @@ namespace Fenrir.Cli
                 }
                 catch
                 {
-                    // try to load tsv
-                    requestTree = new LoadHttpRequestTreeFromTsv().Execute(args.RequestFilePath);;
+                    try
+                    {
+                        // try to load tsv
+                        requestTree = new LoadHttpRequestTreeFromTsv().Execute(args.RequestFilePath);
+                    }
+                    catch
+                    {
+                        // try to load url list
+                        requestTree = new LoadHttpRequestTreeFromListOfUrls().Execute(args.RequestFilePath);
+                    }
                 }
             }
 

@@ -12,7 +12,7 @@ using Fenrir.Cli.Usecases;
 
 namespace Fenrir.Cli.Tests
 {
-    public class TsvTests
+    public class LoadFromTsvTests
     {
         private const string url = "http://www.cnet.com";
 

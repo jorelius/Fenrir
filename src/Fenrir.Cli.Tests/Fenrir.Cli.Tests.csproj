@@ -10,6 +10,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\minimum-fields.tsv" />
     <EmbeddedResource Include="Resources\full-header.tsv" />
+    <EmbeddedResource Include="Resources\url-list.txt" />
   </ItemGroup>
 
   <ItemGroup>
