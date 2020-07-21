@@ -52,6 +52,11 @@ namespace Fenrir.Core.Jobs
                 threadResult.AddResult(new Result { Code = -1 });
                 threadResult.AddError(_localStopwatch.ElapsedMilliseconds, startTime, -1);
             }
+            catch (Exception e) // anything else
+            {
+                threadResult.AddResult(new Result { Code = -2 });
+                threadResult.AddError(_localStopwatch.ElapsedMilliseconds, startTime, -2);
+            }
 
             return threadResult;
         }

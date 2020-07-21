@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Fenrir.Core</PackageId>
-    <Version>0.1.15</Version>
+    <Version>0.1.16</Version>
     <Authors>Jorel Fermin</Authors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
