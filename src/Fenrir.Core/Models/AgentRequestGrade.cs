@@ -24,7 +24,13 @@ namespace Fenrir.Core.Models
                 Grade grade = null;
                 if (result.Request.ExpectedResult != null)
                 {
-                    string contentType = result.Request.Metadata.Result.Payload.Headers["Content-Type"]; 
+                    string contentType;
+                    
+                    if (!result.Request.Metadata.Result.Payload.Headers.TryGetValue("Content-Type", out contentType))
+                    {
+                        contentType = "text/plain";
+                    } 
+
                     var header = MediaTypeHeaderValue.Parse(contentType); 
                     IResultComparer comparer = comparerFactory.GetByContentType(header.MediaType);
 
