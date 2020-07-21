@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -54,7 +55,7 @@ namespace Fenrir.Core.Jobs
             }
             catch (Exception e) // anything else
             {
-                threadResult.AddResult(new Result { Code = -2 });
+                threadResult.AddResult(new Result { Code = -2, Payload = new Payload { Headers = new Dictionary<string, string>(), Body = e.ToString() }});
                 threadResult.AddError(_localStopwatch.ElapsedMilliseconds, startTime, -2);
             }
 
