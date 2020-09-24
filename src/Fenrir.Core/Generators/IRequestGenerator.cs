@@ -1,4 +1,5 @@
-﻿using Fenrir.Core.Models.RequestTree;
+﻿using Fenrir.Core.Comparers;
+using Fenrir.Core.Models.RequestTree;
 using System;
 using System.Collections.Generic;
 
@@ -26,6 +27,12 @@ namespace Fenrir.Core.Generators
         string Description { get; }
 
         List<Option> Options { get; set; }
+
+        /// <summary>
+        /// Generator override for default 
+        /// comparer factory
+        /// </summary>
+        ResultComparerFactory ComparerFactoryOverride { get; set; } 
 
         IEnumerable<Request> Run();
     }

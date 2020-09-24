@@ -10,15 +10,21 @@ namespace Fenrir.Core.Models
 {
     public class AgentRequestGrade
     {
+        public AgentRequestGrade(ResultComparerFactory comparerFactory = null)
+        {
+            ComparerFactory = comparerFactory ?? new ResultComparerFactory();
+        }
+
         public IEnumerable<Request> Requests;
 
         public int Passed { get; private set; }
         public int Failed { get; private set; }
         public int Undefined { get; private set; }
 
+        public ResultComparerFactory ComparerFactory { get; private set; }
+
         public void Process(IEnumerable<AgentThreadResult> results)
         {
-            var comparerFactory = new ResultComparerFactory(); 
             foreach(var result in results)
             {
                 Grade grade = null;
@@ -31,8 +37,8 @@ namespace Fenrir.Core.Models
                         contentType = "text/plain";
                     } 
 
-                    var header = MediaTypeHeaderValue.Parse(contentType); 
-                    IResultComparer comparer = comparerFactory.GetByContentType(header.MediaType);
+                    var header = MediaTypeHeaderValue.Parse(contentType);
+                    IResultComparer comparer = ComparerFactory.GetByContentType(header.MediaType);
 
                     grade = comparer.Compare(result.Request.ExpectedResult, result.Request.Metadata.Result);
                 }

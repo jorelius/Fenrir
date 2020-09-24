@@ -1,4 +1,5 @@
-﻿using Fenrir.Core.Generators;
+﻿using Fenrir.Core.Comparers;
+using Fenrir.Core.Generators;
 using Fenrir.Core.Models.RequestTree;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Fenrir.Core.Tests.Plugin
         {
             new Option(new OptionDescription("Number", "1", "number of requests"))
         };
+        public ResultComparerFactory ComparerFactoryOverride { get; set; } = null; 
 
         public IEnumerable<Request> Run()
         {
