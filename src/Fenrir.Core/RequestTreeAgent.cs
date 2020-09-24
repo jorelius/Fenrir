@@ -11,6 +11,7 @@ using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;
 using System.Threading.Tasks.Dataflow;
 using System.Net;
+using Fenrir.Core.Comparers;
 
 namespace Fenrir.Core
 {
@@ -18,8 +19,9 @@ namespace Fenrir.Core
     {
         private readonly HttpClient _client;
         private readonly HttpRequestTree _requestTree;
+        private readonly ResultComparerFactory _comparerFactory;
 
-        public RequestTreeAgent(HttpRequestTree requestTree)
+        public RequestTreeAgent(HttpRequestTree requestTree, ResultComparerFactory comparerFactory = null)
         {
             ServicePointManager.ServerCertificateValidationCallback = (message, certificate2, arg3, arg4) => true;
             _client = new HttpClient(new HttpClientHandler
@@ -28,6 +30,7 @@ namespace Fenrir.Core
             });
 
             _requestTree = requestTree;
+            _comparerFactory = comparerFactory;
         }
         
         public Task<AgentResult> Run(int threads)
@@ -83,7 +86,7 @@ namespace Fenrir.Core
             var statsResult = new AgentStats(threads);
             statsResult.Process(combinedThreadResult);
 
-            var gradsResult = new AgentRequestGrade();
+            var gradsResult = new AgentRequestGrade(_comparerFactory);
             gradsResult.Process(results); 
 
             return new AgentResult { Stats = statsResult, Grades = gradsResult };

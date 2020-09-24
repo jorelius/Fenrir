@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using Fenrir.Cli.Usecases;
 using Fenrir.Core;
+using Fenrir.Core.Comparers;
 using Fenrir.Core.Generators;
 using Fenrir.Core.Models;
 using Fenrir.Core.Models.RequestTree;
@@ -58,7 +59,7 @@ namespace Fenrir.Cli
             IEnumerable<Request> requests = requestGenerator.Run();
 
             HttpRequestTree requestTree = new HttpRequestTree() { Requests = requests, Description = requestGenerator.Name };
-            await RunRequestTreeAgent(requestTree, args.Concurrency, requestGenerator.Name, args.OutputFilePath);
+            await RunRequestTreeAgent(requestTree, args.Concurrency, requestGenerator.ComparerFactoryOverride, requestGenerator.Name, args.OutputFilePath);
         }
 
         [ArgActionMethod, ArgDescription("Generate requests from file or pipe"), ArgShortcut("r")]
@@ -112,16 +113,16 @@ namespace Fenrir.Cli
                 ? args.RequestFilePath
                 : "Pipe";
 
-            await RunRequestTreeAgent(requestTree, args.Concurrency, requestSource, args.OutputFilePath);
+            await RunRequestTreeAgent(requestTree, args.Concurrency, null, requestSource, args.OutputFilePath);
         }
 
         #region "static helper methods"
-        private static async Task RunRequestTreeAgent(HttpRequestTree requestTree, int Concurrency, string requestSource, string outputFilePath)
+        private static async Task RunRequestTreeAgent(HttpRequestTree requestTree, int Concurrency, ResultComparerFactory comparerFactory, string requestSource, string outputFilePath)
         {
             // Draw run header
             Console.WriteLine(CliResultViews.StartRequestString, requestSource, Concurrency);
 
-            var requestResult = await RunRequestComparisonAsync(Concurrency, requestTree);
+            var requestResult = await RunRequestComparisonAsync(Concurrency, requestTree, comparerFactory);
             var grades = requestResult.Grades;
             var stats = requestResult.Stats;
 
@@ -165,10 +166,10 @@ namespace Fenrir.Cli
                 Requests = generator.Run()
             };
 
-            return await RunRequestComparisonAsync(threads, tree);
+            return await RunRequestComparisonAsync(threads, tree, null);
         }
 
-        private static async Task<AgentResult> RunRequestComparisonAsync(int threads, HttpRequestTree requestTree)
+        private static async Task<AgentResult> RunRequestComparisonAsync(int threads, HttpRequestTree requestTree, ResultComparerFactory comparerFactory)
         {
             CancellationTokenSource source = new CancellationTokenSource();
             var token = source.Token;
@@ -177,7 +178,7 @@ namespace Fenrir.Cli
                 source.Cancel();
             };
 
-            var agent = new RequestTreeAgent(requestTree);
+            var agent = new RequestTreeAgent(requestTree, comparerFactory);
             return await agent.Run(threads, token);
         }
 
