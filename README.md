@@ -128,7 +128,7 @@ Fenrir supports input via the Json httpRequest Tree Schema. This format enables 
 
 ## Request Plugins ##
 
-Fenrir supports a plugin model for generating requests programmatically. Plugins implement the "IRequestGenerator" interface. This interface allows you to extend the functionality of fenrir and dynamically generate request for various scenarios (load testing, service environment comparison, etc.).
+Fenrir supports a plugin model for generating requests programmatically. Plugins implement the "IRequestGenerator" interface. This interface allows you to extend the functionality of fenrir and dynamically generate request for various scenarios (load testing, service environment comparison, etc.) and control how they are compared to expected values.
 
 ```csharp
     public class TestPlugin : IRequestGenerator
@@ -143,6 +143,8 @@ Fenrir supports a plugin model for generating requests programmatically. Plugins
         {
             new Option(new OptionDescription("FirstOption", "1", "option description"))
         };
+
+        ResultComparerFactory ComparerFactoryOverride { get; set; } = null;
 
         public IEnumerable<Request> Run()
         {
